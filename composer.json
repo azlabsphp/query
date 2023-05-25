@@ -30,8 +30,7 @@
     "require": {
         "drewlabs/collections": "^0.2.3",
         "drewlabs/contracts": "^0.2.5",
-        "drewlabs/core-helpers": "^0.2.2",
-        "drewlabs/support": "^0.2.0"
+        "drewlabs/core-helpers": "^0.2.2"
     },
     "prefer-stable": true,
     "config": {
