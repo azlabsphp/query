@@ -15,6 +15,11 @@
             "Drewlabs\\Query\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Drewlabs\\Query\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "azandrew-sidoine",

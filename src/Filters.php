@@ -35,9 +35,9 @@ class Filters
         'orwhere' => 'or',
 
         // in
-        'in' => 'whereIn',
-        'whereIn' => 'whereIn',
-        'wherein' => 'whereIn',
+        'in' => 'in',
+        'whereIn' => 'in',
+        'wherein' => 'in',
 
         //  not in
         'notIn' => 'notIn',

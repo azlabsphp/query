@@ -35,4 +35,11 @@ interface Queryable
      * @return array<string>
      */
     public function getDeclaredColumns();
+
+    /**
+     * Returns the list of queryable relations.
+     *
+     * @return array
+     */
+    public function getDeclaredRelations();
 }

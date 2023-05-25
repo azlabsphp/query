@@ -85,32 +85,31 @@ class QueryFiltersBuilder
      */
     public static function from_Parameters(Queryable $instance, $inputBag, $defaults = [])
     {
-        $filters = array_map(static function ($filter) {
+        $filters = iterator_to_array(self::prepare_Default_Filters(static function ($filter) {
             // We check first if the filter is an array. If the filter is an array,
             // we then we check if the array is an array of arrays (1). If case (1) resolves
             // to true, we return the filter, else we wrap the filter in an array
             return \is_array($filter) && array_filter($filter, 'is_array') === $filter ? $filter : [$filter];
-        }, $defaults ?? []);
+        }, $defaults ?? []));
         if ($inputBag->has($instance->getPrimaryKey()) && null !== $inputBag->get($instance->getPrimaryKey())) {
-            $filters['where'][] = [$instance->getPrimaryKey(), $inputBag->get($instance->getPrimaryKey())];
+            $filters['and'][] = [$instance->getPrimaryKey(), $inputBag->get($instance->getPrimaryKey())];
         }
         foreach ($inputBag->all() as $key => $value) {
-            $array = $instance->getDeclaredColumns();
             if (\is_string($value) && Str::contains($value, '|')) {
                 // For composed value, if the value is a string and contains | character we split the value using
                 // the | character and foreach item in the splitted list we add a filter
                 $items = \is_string($value) && Str::contains($value, '|') ? Str::split($value, '|') : $value;
                 foreach ($items as $item) {
-                    $filters = static::prepare_Array_Filters($filters, $key, $item, $array, $instance);
+                    $filters = static::prepare_Array_Filters($filters, $key, $item, $instance);
                 }
                 continue;
             }
             if (!empty($value)) {
-                $filters = static::prepare_Array_Filters($filters, $key, $value, $array, $instance);
+                $filters = static::prepare_Array_Filters($filters, $key, $value, $instance);
                 continue;
             }
         }
-        // order this query method in the order of where -> whereHas -> orWhere
+        // order this query method in the order of and -> exists -> or
         // Write a better algorithm for soring
         uksort($filters, static function ($prev, $curr) {
             if ('and' === $prev) {
@@ -148,7 +147,7 @@ class QueryFiltersBuilder
             $query = \is_string($query) ? json_decode($query, true) : (array) $query;
 
             // Decoded query variable must be an associatve array, else we do not proceed in the context execution
-            if (\is_array($query) || !(array_keys($query) !== range(0, \count($query) - 1))) {
+            if (!\is_array($query) || !(array_keys($query) !== range(0, \count($query) - 1))) {
                 return $output;
             }
             foreach ($query as $key => $value) {
@@ -242,28 +241,20 @@ class QueryFiltersBuilder
     /**
      * @param string $key
      * @param mixed  $value
-     * @param object $model
      *
      * @return array
      */
-    private static function prepare_Array_Filters(array $array, $key, $value, array $list, $model)
+    private static function prepare_Array_Filters(array $array, $key, $value, Queryable $queryable)
     {
-        if (\in_array($key, $list, true)) {
-            [$operator, $value, $method] = static::operatorValue($value);
+        if (\in_array($key, array_diff($queryable->getDeclaredColumns(), $queryable->getDeclaredRelations()), true)) {
+            [$operator, $value, $method] = static::operator_Value($value);
             $array[$method ?? 'or'][] = [$key, $operator, $value];
         } elseif (Str::contains($key, ['__'])) {
-            [$name, $column] = explode('__', $key);
-            $name = Str::replace([':', '%'], '.', $name ?? '');
-            $name = Str::contains($name, '.') ? Str::before('.', $name) : $name;
-            if (method_exists($model, $name) && null !== $column) {
-                [$operator, $value, $method] = static::operatorValue($value);
-                $array['exists'][] = [
-                    'column' => $name,
-                    'match' => [
-                        'method' => \is_array($value) ? 'in' : $method ?? 'and',
-                        'params' => [$column, $operator, $value],
-                    ],
-                ];
+            [$name, $column] = [Str::beforeLast('__', $key), Str::afterLast('__', $key)];
+            $name = Str::replace([':', '%', '__'], '.', $name ?? '');
+            if (null !== $column && (false !== array_search((Str::contains($name, '.') ? Str::before('.', $name) : $name), $queryable->getDeclaredRelations(), true))) {
+                [$operator, $value, $method] = static::operator_Value($value);
+                $array['exists'][] = ['column' => $name, 'match' => ['method' => \is_array($value) ? 'in' : $method ?? 'and', 'params' => [$column, $operator, $value]]];
             }
         }
 
@@ -278,14 +269,14 @@ class QueryFiltersBuilder
      *
      * @return array
      */
-    private static function operatorValue($value)
+    private static function operator_Value($value)
     {
         // We use == to represent = db comparison operator
         [$method, $operators, $operator] = ['or', static::QUERY_OPERATORS, null];
 
         foreach ($operators as $current) {
-            // By default we apply the query with or where clause. But in case the developper pass a query string
-            // with &&: or and: operator we query using the where clause
+            // By default we apply the query with or and clause. But in case the developper pass a query string
+            // with &&: or and: operator we query using the and clause
             if (Str::startsWith((string) $value, "and:$current:")) {
                 [$method, $value, $operator] = ['and', Str::after("and:$current:", $value), $current];
                 break;
@@ -313,5 +304,17 @@ class QueryFiltersBuilder
         $method = false !== strtotime((string) $value) ? ('or' === $method ? 'orDate' : 'date') : $method;
 
         return [$operator, $value, $method];
+    }
+
+    /**
+     * Prepare default query filters.
+     *
+     * @return \Traversable<string, mixed, mixed, void>
+     */
+    private static function prepare_Default_Filters(callable $callback, array $default = [])
+    {
+        foreach ($default ?? [] as $key => $value) {
+            yield Filters::get($key) => $callback($value);
+        }
     }
 }
