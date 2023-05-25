@@ -29,7 +29,7 @@ class QueryFiltersBuilderTest extends TestCase
             use ViewModel;
         });
         $this->assertTrue('addresses' === $filters['exists'][0]['column']);
-        $this->assertInternalType('array', $filters['exists'][0]['match']);
+        $this->assertTrue(is_array($filters['exists'][0]['match']));
         $this->assertSame($filters['or'][0], ['lastname', 'like', '%Azandrew%']);
     }
 
@@ -77,7 +77,7 @@ class QueryFiltersBuilderTest extends TestCase
             ];
             use ViewModel;
         });
-        $this->assertInternalType('array', $result['or']);
+        $this->assertTrue(is_array($result['or']));
         $this->assertTrue(!\array_key_exists('and', $result));
     }
 

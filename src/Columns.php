@@ -55,16 +55,15 @@ class Columns
         $this->flatten($this->value, $values);
 
         // Get the list of top level declared relations
-        $mapResult = array_map(static function ($relation) {
-            return Str::contains($relation, '.') ? Str::before('.', $relation) : $relation;
+        $mapResult = array_map(static function ($item) {
+            return false !== strpos($item, '.') ? Str::before('.', $item) : $item;
         }, $relations ?? []);
         // Creates the list of relation fields to be added to the model list of columns
-        $filterResult = array_filter($values, static function ($relation) use ($mapResult, $relations) {
-            if (Str::contains($relation, '.')) {
-                return \in_array(Str::before('.', $relation), $mapResult, true) || \in_array($relation, $relations, true);
+        $filterResult = array_filter($values, static function ($item) use ($mapResult, $relations) {
+            if (false !== strpos($item, '.')) {
+                return \in_array(Str::before('.', $item), $mapResult, true) || \in_array($item, $relations, true);
             }
-
-            return \in_array($relation, $mapResult, true);
+            return \in_array($item, $mapResult, true);
         });
         // Create the actual list of model column to be selected from the database
         $columns = array_intersect($values, $declared);
@@ -74,7 +73,7 @@ class Columns
             $columns = empty($value = array_diff($columns, $filterResult)) ? [null] : $value;
         }
         // Return the tuple of column and relations
-        return [$columns, $filterResult];
+        return [array_values($columns), array_values($filterResult)];
     }
 
     /**
