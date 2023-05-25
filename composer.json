@@ -1,0 +1,37 @@
+{
+    "name": "drewlabs/query",
+    "description": "Provides an abstraction layer for writing query against datasource",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^9.0|^10.0"
+    },
+    "keywords": [
+        "query",
+        "database"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Drewlabs\\Query\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "azandrew-sidoine",
+            "email": "asmyns.platonnas29@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "drewlabs/collections": "^0.2.3",
+        "drewlabs/contracts": "^0.2.5",
+        "drewlabs/core-helpers": "^0.2.2",
+        "drewlabs/support": "^0.2.0"
+    },
+    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {}
+}
