@@ -1,4 +1,4 @@
-# query
+# Query
 
 The `query` library provides abstrations for query language implementation that might work againt any data source driver.
 
