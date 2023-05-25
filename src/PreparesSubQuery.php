@@ -20,7 +20,7 @@ class PreparesSubQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
-        if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && (((array_filter($params, 'is_array') === $params)) && !$isKvPair)) {
+        if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
             return array_map(function ($params) {
                 return [$params['column'], $this->subQueryFactory($params['match'])];
             }, $params);

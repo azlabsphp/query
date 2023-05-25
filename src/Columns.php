@@ -56,13 +56,14 @@ class Columns
 
         // Get the list of top level declared relations
         $mapResult = array_map(static function ($item) {
-            return false !== strpos($item, '.') ? Str::before('.', $item) : $item;
+            return str_contains($item, '.') ? Str::before('.', $item) : $item;
         }, $relations ?? []);
         // Creates the list of relation fields to be added to the model list of columns
         $filterResult = array_filter($values, static function ($item) use ($mapResult, $relations) {
-            if (false !== strpos($item, '.')) {
+            if (str_contains($item, '.')) {
                 return \in_array(Str::before('.', $item), $mapResult, true) || \in_array($item, $relations, true);
             }
+
             return \in_array($item, $mapResult, true);
         });
         // Create the actual list of model column to be selected from the database

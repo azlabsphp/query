@@ -19,7 +19,7 @@ class PreparesInQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
-        if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && (((array_filter($params, 'is_array') === $params)) && !$isKvPair)) {
+        if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
             // The provided query parameters is an array
             return array_map(static function ($q) {
                 return (new self())($q);

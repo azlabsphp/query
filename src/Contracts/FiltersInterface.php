@@ -15,24 +15,42 @@ namespace Drewlabs\Query\Contracts;
 
 use Drewlabs\Contracts\Data\Filters\FiltersInterface as AbstractFilters;
 
-/**
- * @template TBuilder of object
- */
 interface FiltersInterface extends AbstractFilters
 {
     /**
-     * Invoke the current filters object on the builder instance
-     * to build the query platform dependant query.
+     * Invoke the current filters object on the platform builder instance.
      *
-     * @return TBuilder
+     * @template TResult of object
+     * @template TArgs of array
+     *
+     * @param TResult $builder
+     * @param TArgs   $args
+     *
+     * @return TResult
      */
-    public function __invoke($args);
+    public function __call(string $method, $builder, $args);
 
     /**
-     * Invoke the current filters object on the builder instance
-     * to build the query platform dependant query.
+     * Invoke the current filters object on the platform builder instance.
      *
-     * @return TBuilder
+     * @template TResult of object
+     * @template TArgs of array
+     *
+     * @param TResult $builder
+     * @param TArgs   $args
+     *
+     * @return TResult
+     */
+    public function invoke(string $method, $builder, $args);
+
+    /**
+     * Call query filters on the builder instance.
+     *
+     * @template T of object
+     *
+     * @param T $builder
+     *
+     * @return T
      */
     public function apply($builder);
 

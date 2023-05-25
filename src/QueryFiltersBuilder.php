@@ -204,7 +204,7 @@ class QueryFiltersBuilder
     private static function prepare($params, string $method)
     {
         switch ($method) {
-                // Default group
+            // Default group
             case 'and':
             case 'date':
             case 'orDate':
@@ -252,7 +252,7 @@ class QueryFiltersBuilder
         } elseif (Str::contains($key, ['__'])) {
             [$name, $column] = [Str::beforeLast('__', $key), Str::afterLast('__', $key)];
             $name = Str::replace([':', '%', '__'], '.', $name ?? '');
-            if (null !== $column && (false !== array_search((Str::contains($name, '.') ? Str::before('.', $name) : $name), $queryable->getDeclaredRelations(), true))) {
+            if (null !== $column && (false !== array_search(Str::contains($name, '.') ? Str::before('.', $name) : $name, $queryable->getDeclaredRelations(), true))) {
                 [$operator, $value, $method] = static::operator_Value($value);
                 $array['exists'][] = ['column' => $name, 'match' => ['method' => \is_array($value) ? 'in' : $method ?? 'and', 'params' => [$column, $operator, $value]]];
             }

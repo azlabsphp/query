@@ -63,11 +63,11 @@ class Attribute
     private function validateAttributes()
     {
         if (
-            (null === $this->class) ||
-            (\is_string($this->class) &&
-                !class_exists($this->class)) ||
-            (\is_object($this->class) &&
-                !method_exists($this->class, 'getTable'))
+            (null === $this->class)
+            || (\is_string($this->class)
+                && !class_exists($this->class))
+            || (\is_object($this->class)
+                && !method_exists($this->class, 'getTable'))
         ) {
             throw new \InvalidArgumentException('Make sure to provide a valid Eloquent model or a
             model with getTable method that returns a string to the ["model" => ModelClass]');
