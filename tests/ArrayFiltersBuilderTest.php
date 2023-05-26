@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\Tests;
 
-use Drewlabs\Query\QueryFiltersBuilder;
+use Drewlabs\Query\ArrayFiltersBuilder;
 use PHPUnit\Framework\TestCase;
 
-class QueryFiltersBuilderTest extends TestCase
+class ArrayFiltersBuilderTest extends TestCase
 {
     public function test_build_from_query_parameters()
     {
-        $filters = QueryFiltersBuilder::from_Parameters(new Person(), new class() {
+        $filters = ArrayFiltersBuilder::from_Parameters(new Person(), new class() {
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
@@ -35,7 +35,7 @@ class QueryFiltersBuilderTest extends TestCase
 
     public function test_build_from_query_input()
     {
-        $result = QueryFiltersBuilder::from__Query(new class() {
+        $result = ArrayFiltersBuilder::from__Query(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],
@@ -59,7 +59,7 @@ class QueryFiltersBuilderTest extends TestCase
 
     public function test_build_method()
     {
-        $result = QueryFiltersBuilder::new(Person::class)->build(new class() {
+        $result = ArrayFiltersBuilder::new(Person::class)->build(new class() {
             private $inputs = [
                 'firstname' => 'SIDOINE',
                 'age' => '20',
@@ -83,7 +83,7 @@ class QueryFiltersBuilderTest extends TestCase
 
     public function test_filter_query_parameters_returns_and_clauses_if_value_contains_and_operator()
     {
-        $result = QueryFiltersBuilder::from_Parameters(new Person(), $this->createParametersBag([
+        $result = ArrayFiltersBuilder::from_Parameters(new Person(), $this->createParametersBag([
             'email' => '&&:==:azandrewdevelopper@gmail.com',
             'lastname' => 'and:=like:AZOMEDOH',
             'age' => '&&:>=:2022-10-10|&&:<=:2022-10-10',
@@ -103,7 +103,7 @@ class QueryFiltersBuilderTest extends TestCase
                 return $query->where('url', 'http://localhost:8000/pictures/1665418738634445f249513042648693');
             }
         };
-        $result = QueryFiltersBuilder::new(new Person())->build(
+        $result = ArrayFiltersBuilder::new(new Person())->build(
             $this->createParametersBag(
                 [
                     'email' => '&&:==:azandrewdevelopper@gmail.com',
@@ -131,7 +131,7 @@ class QueryFiltersBuilderTest extends TestCase
 
     public function test_alternate_query_methods()
     {
-        $result = QueryFiltersBuilder::from__Query(new class() {
+        $result = ArrayFiltersBuilder::from__Query(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],

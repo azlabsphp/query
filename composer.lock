@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b67a1f56959daefb7880d7635e56f629",
+    "content-hash": "1f1c5030b12dd9118a42b2daca7de3b5",
     "packages": [
         {
             "name": "brick/math",
@@ -243,57 +243,6 @@
                 "source": "https://github.com/azandrew-sidoine/drewlabs-php-overloadable/tree/v0.1.10"
             },
             "time": "2023-04-04T10:42:40+00:00"
-        },
-        {
-            "name": "drewlabs/support",
-            "version": "v0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/azlabsphp/support.git",
-                "reference": "d785be003dfbbbd7714ecdb623e93068c9b1b208"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/support/zipball/d785be003dfbbbd7714ecdb623e93068c9b1b208",
-                "reference": "d785be003dfbbbd7714ecdb623e93068c9b1b208",
-                "shasum": ""
-            },
-            "require": {
-                "drewlabs/collections": "^0.2.0",
-                "drewlabs/contracts": "^0.2",
-                "drewlabs/core-helpers": "^0.2",
-                "php": "^7.2|^7.3|^7.4|^8.0|^8.1",
-                "psr/container": "^1.0|^2.0",
-                "symfony/polyfill-php81": "^1.24"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.5"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "./src/proxies.php"
-                ],
-                "psr-4": {
-                    "Drewlabs\\Support\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "azandrew-sidoine",
-                    "email": "asmyns.platonnas29@gmail.com"
-                }
-            ],
-            "description": "Utility library for creating common objects like value object, collection, action creator etc...",
-            "support": {
-                "issues": "https://github.com/azlabsphp/support/issues",
-                "source": "https://github.com/azlabsphp/support/tree/v0.2.0"
-            },
-            "time": "2023-05-19T13:41:11+00:00"
         },
         {
             "name": "psr/container",

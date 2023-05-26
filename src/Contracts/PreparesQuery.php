@@ -16,9 +16,9 @@ namespace Drewlabs\Query\Contracts;
 interface PreparesQuery
 {
     /**
-     * @template T of string|int|array|mixed
+     * @psalm-template T of string|int|array|mixed
      *
-     * @param T $params
+     * @param T|array $params
      *
      * @return T|array
      */

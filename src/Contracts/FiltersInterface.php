@@ -18,23 +18,21 @@ use Drewlabs\Contracts\Data\Filters\FiltersInterface as AbstractFilters;
 interface FiltersInterface extends AbstractFilters
 {
     /**
-     * Invoke the current filters object on the platform builder instance.
+     * `apply` method alias as a dropping substitution method
      *
-     * @template TResult of object
-     * @template TArgs of array
+     * @psalm-template TArg of object
      *
-     * @param TResult $builder
-     * @param TArgs   $args
+     * @param TArg   $arguments
      *
-     * @return TResult
+     * @return TArg|object
      */
-    public function __call(string $method, $builder, $args);
+    public function call($builder);
 
     /**
      * Invoke the current filters object on the platform builder instance.
      *
-     * @template TResult of object
-     * @template TArgs of array
+     * @psalm-template TResult of object
+     * @psalm-template TArgs of array
      *
      * @param TResult $builder
      * @param TArgs   $args
@@ -46,7 +44,7 @@ interface FiltersInterface extends AbstractFilters
     /**
      * Call query filters on the builder instance.
      *
-     * @template T of object
+     * @psalm-template T of object
      *
      * @param T $builder
      *

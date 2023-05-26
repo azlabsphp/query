@@ -26,9 +26,11 @@ class PrepareBaseQuery implements PreparesQuery
             }, $params);
         }
         if ($isKvPair && isset($params['match'])) {
-            return (new PreparesSubQuery())($params['match']);
+            return PreparesSubQuery::subQueryFactory($params['match']);
         }
-
+        if ($isKvPair) {
+            return PreparesSubQuery::subQueryFactory($params);
+        }
         return $params;
     }
 }

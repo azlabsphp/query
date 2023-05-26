@@ -23,37 +23,11 @@ use function Drewlabs\Support\Proxy\Action;
 use function Drewlabs\Support\Proxy\ActionResult;
 
 /**
- * High order function to apply $closure to each item of an
- * {@see \Drewlabs\Query\EnumerableResult} instance.
- *
- * @return \Closure
- */
-function useMapQueryResult(\Closure $closure)
-{
-    return static function ($items) use ($closure) {
-        return drewlabs_database_map_query_result($items, $closure);
-    };
-}
-
-/**
- * High order function to apply a closure to a collection or list of type
- * {@see \Drewlabs\Query\EnumerableResult[]}.
- *
- * @return \Closure
- */
-function useApplyToQueryResult(\Closure $closure)
-{
-    return static function ($items) use ($closure) {
-        return drewlabs_database_apply($items, $closure);
-    };
-}
-
-/**
  * Creates a `SELECT` type query action using user provided by function user.
  *
  * + SelectQueryAction($id [, array $columns,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\SelectQueryAction;
+ * use function Drewlabs\Query\Proxy\SelectQueryAction;
  *
  * // ...
  *
@@ -64,7 +38,7 @@ function useApplyToQueryResult(\Closure $closure)
  * + SelectQueryAction(array $query [, array $columns,\Closure $callback])
  * + SelectQueryAction(array $query, int $per_page [?int $page = null, array $columns,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\SelectQueryAction;
+ * use function Drewlabs\Query\Proxy\SelectQueryAction;
  *
  * //...
  *
@@ -80,12 +54,11 @@ function useApplyToQueryResult(\Closure $closure)
  * + SelectQueryAction(FiltersInterface $query [, array $columns,\Closure $callback])
  * + SelectQueryAction(FiltersInterface $query, int $per_page [?int $page = null, array $columns,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\ModelFiltersHandler;
- * use function Drewlabs\Packages\Database\Proxy\SelectQueryAction;
+ * use function Drewlabs\Query\Proxy\SelectQueryAction;
  *
  * // ...
  * // Example
- * $action = SelectQueryAction(ModelFiltersHandler(...));
+ * $action = SelectQueryAction(new MyFiltersHandler(...));
  * ```
  *
  * @param mixed $payload
@@ -102,7 +75,7 @@ function SelectQueryAction(...$payload)
  *
  * + UpdateQueryAction($id, array|object $attributes [,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\UpdateQueryAction;
+ * use function Drewlabs\Query\Proxy\UpdateQueryAction;
  *
  * // ...
  *
@@ -112,18 +85,17 @@ function SelectQueryAction(...$payload)
  *
  * + UpdateQueryAction(array $query, array|object $attributes [,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\UpdateQueryAction;
+ * use function Drewlabs\Query\Proxy\UpdateQueryAction;
  *
  * // ...
  *
  * // Example
- * $action = UpdateQueryAction(ModelFiltersHandler(...), ['name' => 'John Doe'])
+ * $action = UpdateQueryAction(new MyFiltersHandler(...), ['name' => 'John Doe'])
  * ```
  *
  * + UpdateQueryAction(FiltersInterface $query, array|object $attributes [,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\UpdateQueryAction;
- * use function Drewlabs\Packages\Database\Proxy\ModelFiltersHandler;
+ * use function Drewlabs\Query\Proxy\UpdateQueryAction;
  *
  * // ...
  *
@@ -145,7 +117,7 @@ function UpdateQueryAction(...$payload)
  *
  * + DeleteQueryAction($id [,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\DeleteQueryAction;
+ * use function Drewlabs\Query\Proxy\DeleteQueryAction;
  *
  * // ...
  *
@@ -155,7 +127,7 @@ function UpdateQueryAction(...$payload)
  *
  * + DeleteQueryAction(array $query [,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\DeleteQueryAction;
+ * use function Drewlabs\Query\Proxy\DeleteQueryAction;
  *
  * // ...
  *
@@ -165,13 +137,12 @@ function UpdateQueryAction(...$payload)
  *
  * + DeleteQueryAction(FiltersInterface $query [,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\DeleteQueryAction;
- * use function Drewlabs\Packages\Database\Proxy\ModelFiltersHandler;
+ * use function Drewlabs\Query\Proxy\DeleteQueryAction;
  *
  * // ...
  *
  * // Example
- * $action = DeleteQueryAction(ModelFiltersHandler(...))
+ * $action = DeleteQueryAction(new MyFiltersHandler(...))
  * ```
  *
  * @param mixed ...$payload
@@ -188,7 +159,7 @@ function DeleteQueryAction(...$payload)
  *
  * + CreateQueryAction(array $attributes [, array $params, \Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\CreateQueryAction;
+ * use function Drewlabs\Query\Proxy\CreateQueryAction;
  *
  * // ...
  *
@@ -198,7 +169,7 @@ function DeleteQueryAction(...$payload)
  *
  * + CreateQueryAction(object $attributes, [, array $params ,\Closure $callback])
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\CreateQueryAction;
+ * use function Drewlabs\Query\Proxy\CreateQueryAction;
  *
  * // ...
  *
@@ -223,11 +194,11 @@ function CreateQueryAction(...$payload)
  * Provides a default action handler for database queries.
  *
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\useDMLQueryActionCommand;
+ * use function Drewlabs\Query\Proxy\useQueryCommand;
  * use function Drewlabs\Packages\Database\Proxy\DMLManager;
- * use function Drewlabs\Packages\Database\Proxy\SelectQueryAction;
+ * use function Drewlabs\Query\Proxy\SelectQueryAction;
  *
- * $command = useDMLQueryActionCommand(DMLManager(Test::class));
+ * $command = useQueryCommand(DMLManager(Test::class));
  * // Executing command with an action using `exec` method
  * $result = $command->exec(SelectQueryAction($id));
  *
@@ -236,7 +207,7 @@ function CreateQueryAction(...$payload)
  *
  *
  * // Creatating and executing action in a single line
- * useDMLQueryActionCommand(DMLManager(Test::class))(SelectQueryAction($id));
+ * useQueryCommand(DMLManager(Test::class))(SelectQueryAction($id));
  * ```
  *
  * **Note**
@@ -244,11 +215,12 @@ function CreateQueryAction(...$payload)
  * a second parameter that allow developpers to provides their own custom action handler.
  *
  * ```php
- * use function Drewlabs\Packages\Database\Proxy\useDMLQueryActionCommand;
+ * use Drewlabs\Contracts\Support\Actions\Action;
+ * 
+ * use function Drewlabs\Query\Proxy\useQueryCommand;
  * use function Drewlabs\Packages\Database\Proxy\DMLManager;
- * use use Drewlabs\Contracts\Support\Actions\Action;
  *
- * $command = useDMLQueryActionCommand(DMLManager(Test::class), function(Action $action, ?\Closure $callback = null) {
+ * $command = useQueryCommand(DMLManager(Test::class), function(Action $action, ?\Closure $callback = null) {
  *      // Provides custom action handlers
  * });
  * ```

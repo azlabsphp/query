@@ -32,7 +32,7 @@ interface PaginateResultInterface
     /**
      * returns the list of items.
      *
-     * @template TResult
+     * @psalm-template TResult
      *
      * @return TResult
      */

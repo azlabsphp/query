@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Query;
 
 use Closure;
+use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
 class PreparesSubQuery implements PreparesQuery
@@ -22,11 +23,10 @@ class PreparesSubQuery implements PreparesQuery
     {
         if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
             return array_map(function ($params) {
-                return [$params['column'], $this->subQueryFactory($params['match'])];
+                return [$params['column'], static::subQueryFactory($params['match'])];
             }, $params);
         }
-
-        return [$params['column'], $this->subQueryFactory($params['match'])];
+        return [$params['column'], static::subQueryFactory($params['match'])];
     }
 
     /**
@@ -36,19 +36,14 @@ class PreparesSubQuery implements PreparesQuery
      *
      * @return Closure(mixed $q): mixed
      */
-    private function subQueryFactory($query)
+    public static function subQueryFactory($query)
     {
         static::validateFilters($query);
-        [$method, $params] = [$query['method'], ['params']];
-
-        return static function ($q) {
-            // $method = self::QUERY_METHODS[$method] ?? $method;
-            // if ((((array_filter($params, 'is_array') === $params)) && !(array_keys($params) !== range(0, \count($params) - 1)))) {
-            //     \call_user_func([$q, $method], $params);
-            // } else {
-            //     \call_user_func([$q, $method], ...$params);
-            // }
-            // TODO: Build a filters instance and invoke it with params
+        [$method, $params] = [$query['method'], $query['params']];
+        return static function (FiltersInterface $instance, $builder) use ($method, $params) {
+            // Prepare the query filters into the output variable to ensure method matches supported method
+            $result = ArrayFiltersBuilder::prepare($params, $method = Filters::get($method));
+            return $instance->invoke($method, $builder, $result);
         };
     }
 
@@ -59,7 +54,7 @@ class PreparesSubQuery implements PreparesQuery
      *
      * @return void
      */
-    private function validateFilters(array $params)
+    private static function validateFilters(array $params)
     {
         if (!isset($params['method']) || !isset($params['params'])) {
             throw new \InvalidArgumentException('The query object requires "method" and "params" keys');

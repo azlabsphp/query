@@ -17,8 +17,9 @@ use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Core\Helpers\Str;
 use Drewlabs\Query\Contracts\InputBagInterface;
 use Drewlabs\Query\Contracts\Queryable;
+use InvalidArgumentException;
 
-class QueryFiltersBuilder
+class ArrayFiltersBuilder
 {
     /**
      * List of query operator supported by the Query Filters handler.
@@ -77,6 +78,8 @@ class QueryFiltersBuilder
 
     /**
      * Build filters from parameter bags.
+     * 
+     * **Note** It's an internal API implementation, do not use directly as the API might change
      *
      * @param InputBagInterface $inputBag
      * @param array             $defaults
@@ -130,8 +133,12 @@ class QueryFiltersBuilder
     }
 
     /**
+     * @internal
+     * 
      * Build query filters using '_query' property of the parameter bag.
      *
+     * **Note** It's an internal API implementation, do not use directly as the API might change
+     * 
      * @param InputBagInterface $queryBag
      * @param array             $output
      *
@@ -150,46 +157,65 @@ class QueryFiltersBuilder
             if (!\is_array($query) || !(array_keys($query) !== range(0, \count($query) - 1))) {
                 return $output;
             }
-            foreach ($query as $key => $value) {
-                // Initialize the result array
-                $results = [];
-
-                // We search for the query key matches in the supported query methods
-                if (Filters::exists($key)) {
-                    // get the query filters for the current key and set the key value to the resolved value
-                    $results = static::prepare($value, $key = Filters::get($key));
-                }
-
-                // In case the buildParameters() returns an empty result we simply ignore the provided
-                // query method
-                if (empty($results)) {
-                    continue;
-                }
-
-                // We try to merge the current query parameters into existing parameters
-                // if they exist in the filters
-                if (isset($output[$key])) {
-                    if (array_filter($results, 'is_array') === $results) {
-                        foreach ($results as $current) {
-                            $output[$key][] = $current;
-                        }
-                    } else {
-                        $output[$key][] = $results;
-                    }
-                    continue;
-                }
-
-                if (!\is_array($results)) {
-                    $output[$key] = $results;
-                    continue;
-                }
-
-                // Default case
-                $output[$key] = array_merge($output[$key] ?? [], $results);
-            }
+            
+            self::map_Into_Array($query, $output);
         }
 
         return $output;
+    }
+
+
+    /**
+     * @internal
+     * 
+     * Map query filters into the `$output` array
+     * 
+     * **Note** It's an internal API implementation, do not use directly as the API might change
+     * 
+     * @param array $query 
+     * @param array $output 
+     * @return void 
+     * @throws InvalidArgumentException 
+     */
+    private static function map_Into_Array(array $query, array &$output)
+    {
+        foreach ($query as $key => $value) {
+            // Initialize the result array
+            $results = [];
+
+            // We search for the query key matches in the supported query methods
+            if (Filters::exists($key)) {
+                // get the query filters for the current key and set the key value to the resolved value
+                $results = static::prepare($value, $key = Filters::get($key));
+            }
+
+            // In case the buildParameters() returns an empty result we simply ignore the provided
+            // query method
+            if (empty($results)) {
+                continue;
+            }
+
+            // We try to merge the current query parameters into existing parameters
+            // if they exist in the filters
+            if (isset($output[$key])) {
+                if (array_filter($results, 'is_array') === $results) {
+                    foreach ($results as $current) {
+                        $output[$key][] = $current;
+                    }
+                } else {
+                    $output[$key][] = $results;
+                }
+                continue;
+            }
+
+            if (!\is_array($results)) {
+                $output[$key] = $results;
+                continue;
+            }
+
+            // Default case
+            $output[$key] = array_merge($output[$key] ?? [], $results);
+        }
     }
 
     /**
@@ -201,7 +227,7 @@ class QueryFiltersBuilder
      *
      * @return mixed
      */
-    private static function prepare($params, string $method)
+    public static function prepare($params, string $method)
     {
         switch ($method) {
             // Default group
