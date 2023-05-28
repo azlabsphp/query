@@ -13,7 +13,10 @@
     "autoload": {
         "psr-4": {
             "Drewlabs\\Query\\": "src/"
-        }
+        },
+        "files": [
+            "proxies.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
