@@ -216,7 +216,7 @@ function CreateQueryAction(...$payload)
  *
  * ```php
  * use Drewlabs\Contracts\Support\Actions\Action;
- * 
+ *
  * use function Drewlabs\Query\Proxy\useQueryCommand;
  * use function Drewlabs\Packages\Database\Proxy\DMLManager;
  *

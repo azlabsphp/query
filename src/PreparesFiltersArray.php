@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the drewlabs namespace.
+ *
+ * (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Drewlabs\Query;
 
@@ -11,9 +21,7 @@ class PreparesFiltersArray
     private $values;
 
     /**
-     * Creates class instance
-     * 
-     * @param array $values 
+     * Creates class instance.
      */
     public function __construct(array $values)
     {
@@ -21,11 +29,9 @@ class PreparesFiltersArray
     }
 
     /**
-     * Creates new class instance
-     * 
-     * @param array $values
-     * 
-     * @return static 
+     * Creates new class instance.
+     *
+     * @return static
      */
     public static function new(array $values = [])
     {
@@ -34,29 +40,30 @@ class PreparesFiltersArray
 
     /**
      * Prepares a array of filters by mapping filter methods from input source
-     * and validating filters parameters
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
+     * and validating filters parameters.
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return array
      */
-    public function prepare()
+    public function call()
     {
         $output = [];
         self::prepareInto($this->values, $output);
+
         return $output;
     }
 
-
     /**
      * @internal
-     * 
+     *
      * Map query filters into the `$output` array
-     * 
+     *
      * **Note** It's an internal API implementation, do not use directly as the API might change
-     * 
-     * @param array $output 
-     * @return void 
-     * @throws InvalidArgumentException 
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return void
      */
     public function prepareInto(array &$output)
     {
@@ -100,7 +107,9 @@ class PreparesFiltersArray
     }
 
     /**
-     * Build queries based on list of query parameters.
+     * @internal
+     *
+     * Build queries based on list of query parameters
      *
      * @param array|string|mixed $params
      *
@@ -108,7 +117,7 @@ class PreparesFiltersArray
      *
      * @return mixed
      */
-    private static function doPrepare($params, string $method)
+    public static function doPrepare($params, string $method)
     {
         switch ($method) {
             // Default group

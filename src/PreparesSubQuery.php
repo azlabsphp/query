@@ -22,10 +22,11 @@ class PreparesSubQuery implements PreparesQuery
     public function __invoke($params)
     {
         if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
-            return array_map(function ($params) {
+            return array_map(static function ($params) {
                 return [$params['column'], static::subQueryFactory($params['match'])];
             }, $params);
         }
+
         return [$params['column'], static::subQueryFactory($params['match'])];
     }
 
@@ -40,9 +41,11 @@ class PreparesSubQuery implements PreparesQuery
     {
         static::validateFilters($query);
         [$method, $params] = [$query['method'], $query['params']];
+
         return static function (FiltersInterface $instance, $builder) use ($method, $params) {
             // Prepare the query filters into the output variable to ensure method matches supported method
-            $result = PreparesFiltersBag::prepare($params, $method = Filters::get($method));
+            $result = PreparesFiltersArray::doPrepare($params, $method = Filters::get($method));
+
             return $instance->invoke($method, $builder, $result);
         };
     }

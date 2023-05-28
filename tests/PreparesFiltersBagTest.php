@@ -20,8 +20,7 @@ class PreparesFiltersBagTest extends TestCase
 {
     public function test_build_from_query_parameters()
     {
-        $filters = PreparesFiltersBag::from_Query_Parameters(new Person(), new class()
-        {
+        $filters = PreparesFiltersBag::from_Query_Parameters(new Person(), new class() {
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
@@ -36,8 +35,7 @@ class PreparesFiltersBagTest extends TestCase
 
     public function test_build_from_query_input()
     {
-        $result = PreparesFiltersBag::from_Query_Body(new class()
-        {
+        $result = PreparesFiltersBag::from_Query_Body(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],
@@ -61,8 +59,7 @@ class PreparesFiltersBagTest extends TestCase
 
     public function test_build_method()
     {
-        $result = PreparesFiltersBag::new(new class()
-        {
+        $result = PreparesFiltersBag::new(new class() {
             private $inputs = [
                 'firstname' => 'SIDOINE',
                 'age' => '20',
@@ -79,7 +76,7 @@ class PreparesFiltersBagTest extends TestCase
                 ],
             ];
             use ViewModel;
-        })->prepare(function () {
+        })->call(static function () {
             return new (Person::class);
         });
         $this->assertTrue(is_array($result['or']));
@@ -100,11 +97,11 @@ class PreparesFiltersBagTest extends TestCase
 
     public function test_build_query_filters_with_default_parameters()
     {
-        $query = new class()
-        {
+        $query = new class() {
             public function __invoke($query)
             {
                 print_r($query);
+
                 return $query->where('url', 'http://localhost:8000/pictures/1665418738634445f249513042648693');
             }
         };
@@ -125,7 +122,7 @@ class PreparesFiltersBagTest extends TestCase
                     ],
                 ]
             )
-        )->prepare(
+        )->call(
             new Person(),
             [
                 'whereHas' => ['profile', $query],
@@ -138,8 +135,7 @@ class PreparesFiltersBagTest extends TestCase
 
     public function test_alternate_query_methods()
     {
-        $result = PreparesFiltersBag::from_Query_Body(new class()
-        {
+        $result = PreparesFiltersBag::from_Query_Body(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],
@@ -172,8 +168,7 @@ class PreparesFiltersBagTest extends TestCase
 
     private function createParametersBag(array $inputs)
     {
-        return new class($inputs)
-        {
+        return new class($inputs) {
             /**
              * Parameters.
              *

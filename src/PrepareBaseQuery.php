@@ -31,6 +31,7 @@ class PrepareBaseQuery implements PreparesQuery
         if ($isKvPair) {
             return PreparesSubQuery::subQueryFactory($params);
         }
+
         return $params;
     }
 }

@@ -18,11 +18,9 @@ use Drewlabs\Contracts\Data\Filters\FiltersInterface as AbstractFilters;
 interface FiltersInterface extends AbstractFilters
 {
     /**
-     * `apply` method alias as a dropping substitution method
+     * `apply` method alias as a dropping substitution method.
      *
      * @psalm-template TArg of object
-     *
-     * @param TArg   $arguments
      *
      * @return TArg|object
      */
