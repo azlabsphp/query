@@ -18,7 +18,7 @@ use Drewlabs\Core\Helpers\Str;
 use Drewlabs\Query\Contracts\FilterBagInterface;
 use Drewlabs\Query\Contracts\Queryable;
 use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
-use Drewlabs\Query\Utilss\FiltersBag;
+use Drewlabs\Query\Utils\FiltersBag;
 
 class PreparesFiltersBag
 {
