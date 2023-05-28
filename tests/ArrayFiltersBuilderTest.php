@@ -20,7 +20,7 @@ class ArrayFiltersBuilderTest extends TestCase
 {
     public function test_build_from_query_parameters()
     {
-        $filters = ArrayFiltersBuilder::from_Parameters(new Person(), new class() {
+        $filters = ArrayFiltersBuilder::prepareFromQueryParameters(new Person(), new class() {
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
@@ -35,7 +35,7 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_build_from_query_input()
     {
-        $result = ArrayFiltersBuilder::from__Query(new class() {
+        $result = ArrayFiltersBuilder::prepareFromQueryBody(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],
@@ -83,7 +83,7 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_filter_query_parameters_returns_and_clauses_if_value_contains_and_operator()
     {
-        $result = ArrayFiltersBuilder::from_Parameters(new Person(), $this->createParametersBag([
+        $result = ArrayFiltersBuilder::prepareFromQueryParameters(new Person(), $this->createParametersBag([
             'email' => '&&:==:azandrewdevelopper@gmail.com',
             'lastname' => 'and:=like:AZOMEDOH',
             'age' => '&&:>=:2022-10-10|&&:<=:2022-10-10',
@@ -131,7 +131,7 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_alternate_query_methods()
     {
-        $result = ArrayFiltersBuilder::from__Query(new class() {
+        $result = ArrayFiltersBuilder::prepareFromQueryBody(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],

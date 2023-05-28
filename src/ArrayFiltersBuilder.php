@@ -66,12 +66,16 @@ class ArrayFiltersBuilder
      */
     public function build($inputBag, array $defaults = [])
     {
+        // We first make sure the queryBag variable is resolved to `InputBagInterface` instance
+        $inputBag = is_array($inputBag) || null === $inputBag ? FiltersBag::new($inputBag ?? []) : $inputBag;
+
+        // Compose list of function to apply to queryable instance and $inputBag
         return Functional::compose(
             static function (Queryable $instance) use ($inputBag, $defaults) {
-                return static::from_Parameters($instance, $inputBag, $defaults);
+                return static::prepareFromQueryParameters($instance, $inputBag, $defaults);
             },
             static function ($filters) use ($inputBag) {
-                return static::from__Query($inputBag, $filters);
+                return static::prepareFromQueryBody($inputBag, $filters);
             }
         )($this->queryable);
     }
@@ -81,13 +85,16 @@ class ArrayFiltersBuilder
      * 
      * **Note** It's an internal API implementation, do not use directly as the API might change
      *
-     * @param InputBagInterface $inputBag
+     * @param InputBagInterface|array $inputBag
      * @param array             $defaults
      *
      * @return array<string, mixed>
      */
-    public static function from_Parameters(Queryable $instance, $inputBag, $defaults = [])
+    public static function prepareFromQueryParameters(Queryable $instance, $inputBag, $defaults = [])
     {
+        // We first make sure the queryBag variable is resolved to `InputBagInterface` instance
+        $inputBag = is_array($inputBag) || null === $inputBag ? FiltersBag::new($inputBag ?? []) : $inputBag; 
+
         $filters = iterator_to_array(self::prepare_Default_Filters(static function ($filter) {
             // We check first if the filter is an array. If the filter is an array,
             // we then we check if the array is an array of arrays (1). If case (1) resolves
@@ -139,15 +146,18 @@ class ArrayFiltersBuilder
      *
      * **Note** It's an internal API implementation, do not use directly as the API might change
      * 
-     * @param InputBagInterface $queryBag
+     * @param InputBagInterface|array $queryBag
      * @param array             $output
      *
      * @throws \InvalidArgumentException
      *
      * @return array
      */
-    public static function from__Query($queryBag, $output = [])
+    public static function prepareFromQueryBody($queryBag, $output = [])
     {
+        // We first make sure the queryBag variable is resolved to `InputBagInterface` instance
+        $queryBag = is_array($queryBag) || null === $queryBag ? FiltersBag::new($queryBag ?? []) : $queryBag; 
+        // Set the default fot the output variable
         $output = $output ?? [];
         if ($queryBag->has('_query')) {
             $query = $queryBag->get('_query');
