@@ -42,7 +42,7 @@ class PreparesSubQuery implements PreparesQuery
         [$method, $params] = [$query['method'], $query['params']];
         return static function (FiltersInterface $instance, $builder) use ($method, $params) {
             // Prepare the query filters into the output variable to ensure method matches supported method
-            $result = ArrayFiltersBuilder::prepare($params, $method = Filters::get($method));
+            $result = PreparesFiltersBag::prepare($params, $method = Filters::get($method));
             return $instance->invoke($method, $builder, $result);
         };
     }

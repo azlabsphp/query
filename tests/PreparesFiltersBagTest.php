@@ -13,14 +13,15 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\Tests;
 
-use Drewlabs\Query\ArrayFiltersBuilder;
+use Drewlabs\Query\PreparesFiltersBag;
 use PHPUnit\Framework\TestCase;
 
-class ArrayFiltersBuilderTest extends TestCase
+class PreparesFiltersBagTest extends TestCase
 {
     public function test_build_from_query_parameters()
     {
-        $filters = ArrayFiltersBuilder::prepareFromQueryParameters(new Person(), new class() {
+        $filters = PreparesFiltersBag::from_Query_Parameters(new Person(), new class()
+        {
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
@@ -35,7 +36,8 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_build_from_query_input()
     {
-        $result = ArrayFiltersBuilder::prepareFromQueryBody(new class() {
+        $result = PreparesFiltersBag::from_Query_Body(new class()
+        {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],
@@ -59,7 +61,8 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_build_method()
     {
-        $result = ArrayFiltersBuilder::new(Person::class)->build(new class() {
+        $result = PreparesFiltersBag::new(new class()
+        {
             private $inputs = [
                 'firstname' => 'SIDOINE',
                 'age' => '20',
@@ -76,6 +79,8 @@ class ArrayFiltersBuilderTest extends TestCase
                 ],
             ];
             use ViewModel;
+        })->prepare(function () {
+            return new (Person::class);
         });
         $this->assertTrue(is_array($result['or']));
         $this->assertTrue(!\array_key_exists('and', $result));
@@ -83,7 +88,7 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_filter_query_parameters_returns_and_clauses_if_value_contains_and_operator()
     {
-        $result = ArrayFiltersBuilder::prepareFromQueryParameters(new Person(), $this->createParametersBag([
+        $result = PreparesFiltersBag::from_Query_Parameters(new Person(), $this->createParametersBag([
             'email' => '&&:==:azandrewdevelopper@gmail.com',
             'lastname' => 'and:=like:AZOMEDOH',
             'age' => '&&:>=:2022-10-10|&&:<=:2022-10-10',
@@ -95,15 +100,15 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_build_query_filters_with_default_parameters()
     {
-        $query = new class() {
+        $query = new class()
+        {
             public function __invoke($query)
             {
                 print_r($query);
-
                 return $query->where('url', 'http://localhost:8000/pictures/1665418738634445f249513042648693');
             }
         };
-        $result = ArrayFiltersBuilder::new(new Person())->build(
+        $result = PreparesFiltersBag::new(
             $this->createParametersBag(
                 [
                     'email' => '&&:==:azandrewdevelopper@gmail.com',
@@ -119,7 +124,9 @@ class ArrayFiltersBuilderTest extends TestCase
                         'orderBy' => ['id'],
                     ],
                 ]
-            ),
+            )
+        )->prepare(
+            new Person(),
             [
                 'whereHas' => ['profile', $query],
                 'where' => ['age', 28],
@@ -131,7 +138,8 @@ class ArrayFiltersBuilderTest extends TestCase
 
     public function test_alternate_query_methods()
     {
-        $result = ArrayFiltersBuilder::prepareFromQueryBody(new class() {
+        $result = PreparesFiltersBag::from_Query_Body(new class()
+        {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],
@@ -164,7 +172,8 @@ class ArrayFiltersBuilderTest extends TestCase
 
     private function createParametersBag(array $inputs)
     {
-        return new class($inputs) {
+        return new class($inputs)
+        {
             /**
              * Parameters.
              *

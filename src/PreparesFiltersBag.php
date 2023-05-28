@@ -15,11 +15,11 @@ namespace Drewlabs\Query;
 
 use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Core\Helpers\Str;
-use Drewlabs\Query\Contracts\InputBagInterface;
+use Drewlabs\Query\Contracts\FilterBagInterface;
 use Drewlabs\Query\Contracts\Queryable;
 use InvalidArgumentException;
 
-class ArrayFiltersBuilder
+class PreparesFiltersBag
 {
     /**
      * List of query operator supported by the Query Filters handler.
@@ -29,93 +29,96 @@ class ArrayFiltersBuilder
     private const QUERY_OPERATORS = ['>=', '<=', '<', '>', '<>', '=like', '=='];
 
     /**
-     * @var Queryable
+     * @var FilterBagInterface
      */
-    private $queryable;
+    private $bag;
 
     /**
-     * Creates a new instance of QueryFiltersBuilder.
-     *
-     * @return void
+     * Creates class instances
+     * 
+     * @param FilterBagInterface $bag 
+     * @return void 
      */
-    public function __construct(Queryable $queryable)
+    public function __construct($bag)
     {
-        $this->queryable = $queryable;
+        $this->bag = $bag;
     }
 
     /**
      * Creates new class instance.
      *
-     * @param Queryable|class-string<Queryable> $queryable
-     * @param mixed                             ...$args
+     * @param FilterBagInterface $bag
      *
      * @return self
      */
-    public static function new($queryable, ...$args)
+    public static function new($bag)
     {
-        return new self(\is_string($queryable) ? new $queryable(...$args) : $queryable);
+        return new self($bag);
     }
 
     /**
-     * Creates Query filters from parameter bag
-     * request.
+     * Creates Query filters from parameter bag request.
      *
-     * @param InputBagInterface $inputBag
+     * @param Queryable|\Closure(): Queryable $queryable
      *
      * @return array<string, mixed>
      */
-    public function build($inputBag, array $defaults = [])
+    public function prepare($queryable, array $defaults = [])
     {
+        $queryable = !is_string($queryable) && is_callable($queryable) ? call_user_func($queryable) : $queryable;
+
         // We first make sure the queryBag variable is resolved to `InputBagInterface` instance
-        $inputBag = is_array($inputBag) || null === $inputBag ? FiltersBag::new($inputBag ?? []) : $inputBag;
+        $bag = is_array($this->bag) || null === $this->bag ? FiltersBag::new($this->bag ?? []) : $this->bag;
 
         // Compose list of function to apply to queryable instance and $inputBag
         return Functional::compose(
-            static function (Queryable $instance) use ($inputBag, $defaults) {
-                return static::prepareFromQueryParameters($instance, $inputBag, $defaults);
+            static function (Queryable $instance) use ($bag, $defaults) {
+                return static::from_Query_Parameters($instance, $bag, $defaults);
             },
-            static function ($filters) use ($inputBag) {
-                return static::prepareFromQueryBody($inputBag, $filters);
+            static function ($filters) use ($bag) {
+                return static::from_Query_Body($bag, $filters);
             }
-        )($this->queryable);
+        )($queryable);
     }
 
     /**
+     * @internal
+     * 
      * Build filters from parameter bags.
      * 
      * **Note** It's an internal API implementation, do not use directly as the API might change
      *
-     * @param InputBagInterface|array $inputBag
+     * @param FilterBagInterface|array $filtersBag
      * @param array             $defaults
      *
      * @return array<string, mixed>
      */
-    public static function prepareFromQueryParameters(Queryable $instance, $inputBag, $defaults = [])
+    public static function from_Query_Parameters(Queryable $instance, $filtersBag, $defaults = [])
     {
         // We first make sure the queryBag variable is resolved to `InputBagInterface` instance
-        $inputBag = is_array($inputBag) || null === $inputBag ? FiltersBag::new($inputBag ?? []) : $inputBag; 
+        $filtersBag = is_array($filtersBag) || null === $filtersBag ? FiltersBag::new($filtersBag ?? []) : $filtersBag; 
 
-        $filters = iterator_to_array(self::prepare_Default_Filters(static function ($filter) {
+        $filters = iterator_to_array(self::mapToFilter(static function ($filter) {
             // We check first if the filter is an array. If the filter is an array,
             // we then we check if the array is an array of arrays (1). If case (1) resolves
             // to true, we return the filter, else we wrap the filter in an array
             return \is_array($filter) && array_filter($filter, 'is_array') === $filter ? $filter : [$filter];
         }, $defaults ?? []));
-        if ($inputBag->has($instance->getPrimaryKey()) && null !== $inputBag->get($instance->getPrimaryKey())) {
-            $filters['and'][] = [$instance->getPrimaryKey(), $inputBag->get($instance->getPrimaryKey())];
+        if ($filtersBag->has($instance->getPrimaryKey()) && null !== $filtersBag->get($instance->getPrimaryKey())) {
+            $filters['and'][] = [$instance->getPrimaryKey(), $filtersBag->get($instance->getPrimaryKey())];
         }
-        foreach ($inputBag->all() as $key => $value) {
+        foreach ($filtersBag->all() as $key => $value) {
             if (\is_string($value) && Str::contains($value, '|')) {
                 // For composed value, if the value is a string and contains | character we split the value using
                 // the | character and foreach item in the splitted list we add a filter
                 $items = \is_string($value) && Str::contains($value, '|') ? Str::split($value, '|') : $value;
                 foreach ($items as $item) {
-                    $filters = static::prepare_Array_Filters($filters, $key, $item, $instance);
+                    $filters = static::createSubQuery($filters, $key, $item, $instance);
                 }
                 continue;
             }
             if (!empty($value)) {
-                $filters = static::prepare_Array_Filters($filters, $key, $value, $instance);
+                $filters = static::createSubQuery($filters, $key, $value, $instance);
                 continue;
             }
         }
@@ -146,14 +149,14 @@ class ArrayFiltersBuilder
      *
      * **Note** It's an internal API implementation, do not use directly as the API might change
      * 
-     * @param InputBagInterface|array $queryBag
+     * @param FilterBagInterface|array $queryBag
      * @param array             $output
      *
      * @throws \InvalidArgumentException
      *
      * @return array
      */
-    public static function prepareFromQueryBody($queryBag, $output = [])
+    public static function from_Query_Body($queryBag, $output = [])
     {
         // We first make sure the queryBag variable is resolved to `InputBagInterface` instance
         $queryBag = is_array($queryBag) || null === $queryBag ? FiltersBag::new($queryBag ?? []) : $queryBag; 
@@ -168,110 +171,11 @@ class ArrayFiltersBuilder
                 return $output;
             }
             
-            self::map_Into_Array($query, $output);
+            // Prepare the array filters into the output variable
+            PreparesFiltersArray::new($query)->prepareInto($output);
         }
 
         return $output;
-    }
-
-
-    /**
-     * @internal
-     * 
-     * Map query filters into the `$output` array
-     * 
-     * **Note** It's an internal API implementation, do not use directly as the API might change
-     * 
-     * @param array $query 
-     * @param array $output 
-     * @return void 
-     * @throws InvalidArgumentException 
-     */
-    private static function map_Into_Array(array $query, array &$output)
-    {
-        foreach ($query as $key => $value) {
-            // Initialize the result array
-            $results = [];
-
-            // We search for the query key matches in the supported query methods
-            if (Filters::exists($key)) {
-                // get the query filters for the current key and set the key value to the resolved value
-                $results = static::prepare($value, $key = Filters::get($key));
-            }
-
-            // In case the buildParameters() returns an empty result we simply ignore the provided
-            // query method
-            if (empty($results)) {
-                continue;
-            }
-
-            // We try to merge the current query parameters into existing parameters
-            // if they exist in the filters
-            if (isset($output[$key])) {
-                if (array_filter($results, 'is_array') === $results) {
-                    foreach ($results as $current) {
-                        $output[$key][] = $current;
-                    }
-                } else {
-                    $output[$key][] = $results;
-                }
-                continue;
-            }
-
-            if (!\is_array($results)) {
-                $output[$key] = $results;
-                continue;
-            }
-
-            // Default case
-            $output[$key] = array_merge($output[$key] ?? [], $results);
-        }
-    }
-
-    /**
-     * Build queries based on list of query parameters.
-     *
-     * @param array|string|mixed $params
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return mixed
-     */
-    public static function prepare($params, string $method)
-    {
-        switch ($method) {
-            // Default group
-            case 'and':
-            case 'date':
-            case 'orDate':
-            case 'or':
-                return (new PrepareBaseQuery())($params);
-                // Exists group
-            case 'exists':
-            case 'notExists':
-                return (new PreparesExistQuery())($params);
-                // In group
-            case 'in':
-            case 'notIn':
-                return (new PreparesInQuery())($params);
-                // Sort group
-            case 'sort':
-                return (new PreparesOrderByQuery())($params);
-
-                // Null group
-            case 'isNull':
-            case 'orIsNull':
-            case 'notNull':
-            case 'orNotNull':
-                return (new PreparesNullQuery())($params);
-                // case 'between':
-                // case 'group':
-                // case 'join':
-                // case 'limit':
-
-            default:
-                return $params;
-        }
     }
 
     /**
@@ -280,16 +184,16 @@ class ArrayFiltersBuilder
      *
      * @return array
      */
-    private static function prepare_Array_Filters(array $array, $key, $value, Queryable $queryable)
+    private static function createSubQuery(array $array, $key, $value, Queryable $queryable)
     {
         if (\in_array($key, array_diff($queryable->getDeclaredColumns(), $queryable->getDeclaredRelations()), true)) {
-            [$operator, $value, $method] = static::operator_Value($value);
+            [$operator, $value, $method] = static::operatorValueTuple($value);
             $array[$method ?? 'or'][] = [$key, $operator, $value];
         } elseif (Str::contains($key, ['__'])) {
             [$name, $column] = [Str::beforeLast('__', $key), Str::afterLast('__', $key)];
             $name = Str::replace([':', '%', '__'], '.', $name ?? '');
             if (null !== $column && (false !== array_search(Str::contains($name, '.') ? Str::before('.', $name) : $name, $queryable->getDeclaredRelations(), true))) {
-                [$operator, $value, $method] = static::operator_Value($value);
+                [$operator, $value, $method] = static::operatorValueTuple($value);
                 $array['exists'][] = ['column' => $name, 'match' => ['method' => \is_array($value) ? 'in' : $method ?? 'and', 'params' => [$column, $operator, $value]]];
             }
         }
@@ -305,7 +209,7 @@ class ArrayFiltersBuilder
      *
      * @return array
      */
-    private static function operator_Value($value)
+    private static function operatorValueTuple($value)
     {
         // We use == to represent = db comparison operator
         [$method, $operators, $operator] = ['or', static::QUERY_OPERATORS, null];
@@ -347,7 +251,7 @@ class ArrayFiltersBuilder
      *
      * @return \Traversable<string, mixed, mixed, void>
      */
-    private static function prepare_Default_Filters(callable $callback, array $default = [])
+    private static function mapToFilter(callable $callback, array $default = [])
     {
         foreach ($default ?? [] as $key => $value) {
             yield Filters::get($key) => $callback($value);

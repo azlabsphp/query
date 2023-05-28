@@ -2,9 +2,9 @@
 
 namespace Drewlabs\Query;
 
-use Drewlabs\Query\Contracts\InputBagInterface;
+use Drewlabs\Query\Contracts\FilterBagInterface;
 
-class FiltersBag implements InputBagInterface
+class FiltersBag implements FilterBagInterface
 {
     /**
      * Array of filters

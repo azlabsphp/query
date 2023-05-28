@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\Contracts;
 
-interface InputBagInterface
+interface FilterBagInterface
 {
     /**
      * Checks if attribute exists in the input bag.
