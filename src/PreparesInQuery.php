@@ -15,14 +15,14 @@ namespace Drewlabs\Query;
 
 use Drewlabs\Query\Contracts\PreparesQuery;
 
-class PreparesInQuery implements PreparesQuery
+final class PreparesInQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
         if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
             // The provided query parameters is an array
             return array_map(static function ($q) {
-                return (new self())($q);
+                return (new static())($q);
             }, $params);
         }
         if (!$isKvPair) {

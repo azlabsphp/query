@@ -15,7 +15,7 @@ namespace Drewlabs\Query;
 
 use Drewlabs\Query\Contracts\PreparesQuery;
 
-class PreparesOrderByQuery implements PreparesQuery
+final class PreparesOrderByQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
@@ -24,7 +24,7 @@ class PreparesOrderByQuery implements PreparesQuery
         }
         if (!(array_keys($params) !== range(0, \count($params) - 1)) && !static::isKvPairList($params)) {
             return array_map(static function ($value) {
-                return (new self())($value);
+                return (new static())($value);
             }, $params);
         }
         if (!(isset($params['by']) || isset($params['column'])) && !isset($params['order'])) {

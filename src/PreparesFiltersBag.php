@@ -17,10 +17,10 @@ use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Core\Helpers\Str;
 use Drewlabs\Query\Contracts\FilterBagInterface;
 use Drewlabs\Query\Contracts\Queryable;
-use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
 use Drewlabs\Query\Utils\FiltersBag;
+use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
 
-class PreparesFiltersBag
+final class PreparesFiltersBag
 {
     /**
      * List of query operator supported by the Query Filters handler.
@@ -55,7 +55,7 @@ class PreparesFiltersBag
      */
     public static function new($bag)
     {
-        return new self($bag);
+        return new static($bag);
     }
 
     /**
@@ -100,7 +100,7 @@ class PreparesFiltersBag
         // We first make sure the queryBag variable is resolved to `InputBagInterface` instance
         $bag = \is_array($bag) || null === $bag ? FiltersBag::new($bag ?? []) : $bag;
 
-        $filters = iterator_to_array(self::mapToFilter(static function ($filter) {
+        $filters = iterator_to_array(static::mapToFilter(static function ($filter) {
             // We check first if the filter is an array. If the filter is an array,
             // we then we check if the array is an array of arrays (1). If case (1) resolves
             // to true, we return the filter, else we wrap the filter in an array

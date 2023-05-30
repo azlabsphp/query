@@ -124,7 +124,7 @@ class Filters
      */
     public static function get(string $name)
     {
-        return self::QUERY_FILTERS[$name] ?? $name;
+        return static::QUERY_FILTERS[$name] ?? $name;
     }
 
     /**
@@ -134,6 +134,6 @@ class Filters
      */
     public static function exists(string $name)
     {
-        return false !== array_search($name, array_keys(self::QUERY_FILTERS), true);
+        return false !== array_search($name, array_keys(static::QUERY_FILTERS), true);
     }
 }

@@ -15,7 +15,7 @@ namespace Drewlabs\Query;
 
 use Drewlabs\Core\Helpers\Str;
 
-class Columns
+final class Columns
 {
     /**
      * @var array<string>
@@ -39,7 +39,7 @@ class Columns
      */
     public static function new($columns = ['*'])
     {
-        return new self($columns ?? ['*']);
+        return new static($columns ?? ['*']);
     }
 
     /**

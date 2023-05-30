@@ -49,7 +49,8 @@ class PreparesFiltersArray
     public function call()
     {
         $output = [];
-        self::prepareInto($output);
+        static::prepareInto($output);
+
         return $output;
     }
 

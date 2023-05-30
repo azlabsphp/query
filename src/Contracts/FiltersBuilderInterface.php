@@ -28,20 +28,24 @@ interface FiltersBuilderInterface
     /**
      * apply `date` query.
      *
-     * @param string|\DateTimeInterface|array $date
+     * @param string                    $column
+     * @param string                    $operator
+     * @param \DateTimeInterface|string $value
      *
-     * @return self
+     * @return mixed
      */
-    public function date($date);
+    public function date($column, string $operator = null, $value = null);
 
     /**
-     * add `or date` query.
+     * apply `or date` query.
      *
-     * @param string|\DateTimeInterface $date
+     * @param string                    $column
+     * @param string                    $operator
+     * @param \DateTimeInterface|string $value
      *
-     * @return self
+     * @return mixed
      */
-    public function orDate($date);
+    public function orDate($column, string $operator = null, $value = null);
 
     /**
      * add `or` query.
@@ -56,16 +60,20 @@ interface FiltersBuilderInterface
     /**
      * add `exists` query.
      *
+     * @param string|\Closure(self $builder):self $query
+     *
      * @return self
      */
-    public function exists(string $column, callable $callback = null);
+    public function exists(string $column, $query = null);
 
     /**
      * add `not exists` query.
      *
+     * @param string|\Closure(self $builder):self $query
+     *
      * @return self
      */
-    public function notExists(string $column, callable $callback = null);
+    public function notExists(string $column, $query = null);
 
     /**
      * add `in` query.
@@ -84,11 +92,9 @@ interface FiltersBuilderInterface
     /**
      * add `sort` query.
      *
-     * @param int $order
-     *
      * @return self
      */
-    public function sort(string $column, $order = 1);
+    public function sort(string $column, int $order = 1);
 
     /**
      * add `is null` query.
@@ -121,12 +127,11 @@ interface FiltersBuilderInterface
     /**
      * add `between` query.
      *
-     * @param string|\DateTimeInterface $start
-     * @param string|\DateTimeInterface $end
+     * @param iterable $values
      *
      * @return self
      */
-    public function between($start, $end);
+    public function between(string $column, $values);
 
     /**
      * add `group by` query.
@@ -148,4 +153,15 @@ interface FiltersBuilderInterface
      * @return self
      */
     public function limit(int $limit);
+
+    /**
+     * Get the builded query filters.
+     *
+     * **Note**
+     * If an argument is passed in the implementation
+     * must be able to resolve specific filter value.
+     *
+     * @return array|mixed
+     */
+    public function getQuery(string $method = null);
 }
