@@ -30,5 +30,5 @@ interface CommandInterface
      *
      * @return AbstractActionResult
      */
-    public function exec(AbstractAction $action, \Closure $closure = null);
+    public function call(AbstractAction $action, \Closure $closure = null);
 }
