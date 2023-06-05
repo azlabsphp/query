@@ -42,10 +42,7 @@ class PreparesFiltersBagTest extends TestCase
                     'orWhere' => ['lastname', 'like', '%AZOMEDOH%'],
                     'whereHas' => [
                         'column' => 'addresses',
-                        'match' => [
-                            'method' => 'where',
-                            'params' => ['email', 'like', '%azandrew@%'],
-                        ],
+                        'match' => 'where(email, like, %azandrew@%)',
                     ],
                     'orderBy' => ['id'],
                 ],
@@ -100,8 +97,6 @@ class PreparesFiltersBagTest extends TestCase
         $query = new class() {
             public function __invoke($query)
             {
-                print_r($query);
-
                 return $query->where('url', 'http://localhost:8000/pictures/1665418738634445f249513042648693');
             }
         };
@@ -113,10 +108,7 @@ class PreparesFiltersBagTest extends TestCase
                     '_query' => [
                         'whereHas' => [
                             'column' => 'addresses',
-                            'match' => [
-                                'method' => 'where',
-                                'params' => ['email', 'like', '%azandrew@%'],
-                            ],
+                            'match' => 'and(email, like, %azandrew@%)'
                         ],
                         'orderBy' => ['id'],
                     ],
@@ -142,10 +134,7 @@ class PreparesFiltersBagTest extends TestCase
                     'or' => ['lastname', 'like', '%AZOMEDOH%'],
                     'exists' => [
                         'column' => 'addresses',
-                        'match' => [
-                            'method' => 'where',
-                            'params' => ['email', 'like', '%azandrew@%'],
-                        ],
+                        'match' => 'and(email, like, %azandrew@%)',
                     ],
                     'in' => ['likes', [10, 12, 2]],
                     'notin' => ['name', ['Milick', 'Jonh Doe']],

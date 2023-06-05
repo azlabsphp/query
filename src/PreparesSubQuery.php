@@ -39,28 +39,13 @@ class PreparesSubQuery implements PreparesQuery
      */
     public static function subQueryFactory($query)
     {
-        static::validateFilters($query);
-        [$method, $params] = [$query['method'], $query['params']];
-
-        return static function (FiltersInterface $instance, $builder) use ($method, $params) {
+        return static function (FiltersInterface $instance, $builder) use ($query) {
+            // Compiles subquery into dictionnary case the subquery is a string or a list of values
+            $query = (new PreparesMatchQuery)->__invoke($query);
+            [$method, $params] = [$query['method'], $query['params']];
             // Prepare the query filters into the output variable to ensure method matches supported method
             $result = PreparesFiltersArray::doPrepare($params, $method = Filters::get($method));
-
             return $instance->invoke($method, $builder, $result);
         };
-    }
-
-    /**
-     * Validate sub query parameters.
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return void
-     */
-    private static function validateFilters(array $params)
-    {
-        if (!isset($params['method']) || !isset($params['params'])) {
-            throw new \InvalidArgumentException('The query object requires "method" and "params" keys');
-        }
     }
 }

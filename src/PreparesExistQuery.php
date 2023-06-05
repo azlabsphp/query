@@ -23,14 +23,11 @@ class PreparesExistQuery implements PreparesQuery
             return [$params];
         }
 
-        if ($params === array_filter($params, 'is_string')) {
-            return $params;
-        }
-
-        if (!(array_keys($params) !== range(0, \count($params) - 1)) || (isset($params['match'], $params['column']))) {
+        $isKvPair = array_keys($params) !== range(0, \count($params) - 1);
+        if ($isKvPair && isset($params['match'], $params['column'])) {
             return (new PreparesSubQuery())($params);
         }
-
-        return [];
+    
+        return $params;
     }
 }

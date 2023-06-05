@@ -120,7 +120,7 @@ class PreparesFiltersArray
     public static function doPrepare($params, string $method)
     {
         switch ($method) {
-            // Default group
+                // Default group
             case 'and':
             case 'date':
             case 'orDate':
@@ -128,7 +128,9 @@ class PreparesFiltersArray
                 return (new PrepareBaseQuery())($params);
                 // Exists group
             case 'exists':
+            case 'orExists':
             case 'notExists':
+            case 'orNotExists':
                 return (new PreparesExistQuery())($params);
                 // In group
             case 'in':
@@ -148,7 +150,6 @@ class PreparesFiltersArray
                 // case 'group':
                 // case 'join':
                 // case 'limit':
-
             default:
                 return $params;
         }

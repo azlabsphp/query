@@ -205,6 +205,27 @@ final class Builder implements FiltersBuilderInterface
         return $this;
     }
 
+    public function orExists(string $column, $query = null)
+    {
+        $this->setExistQuery($column, $query, 'orExists');
+
+        return $this;
+    }
+
+
+    public function notExists(string $column, $query = null)
+    {
+        $this->setExistQuery($column, $query, 'notExists');
+
+        return $this;
+    }
+    public function orNotExists(string $column, $query = null)
+    {
+        $this->setExistQuery($column, $query, 'orNotExists');
+
+        return $this;
+    }
+
     public function sort(string $column, int $order = 1)
     {
         $this->__QUERY__ = $this->__QUERY__ ?? [];
@@ -226,13 +247,6 @@ final class Builder implements FiltersBuilderInterface
     public function count($column = '*', string $as = null)
     {
         $this->appendQuery(__FUNCTION__, null !== $as ? [$column, $as] : [$column]);
-
-        return $this;
-    }
-
-    public function notExists(string $column, $query = null)
-    {
-        $this->setExistQuery($column, $query, 'notExists');
 
         return $this;
     }
@@ -381,7 +395,7 @@ final class Builder implements FiltersBuilderInterface
         $query = $query instanceof \Closure ? new SubQuery('query', $query(static::new())->getQuery()) : $query;
         // Case the query is a subquery object we returns the json representation of the query
         $query = $query instanceof SubQuery ? ['column' => $as, 'match' => $query->json()] : (null === $query ? $as : [$as, $query]);
-        
+
         $this->appendQuery($method, $query);
     }
 
@@ -400,7 +414,7 @@ final class Builder implements FiltersBuilderInterface
         $query = (!isset($operatorOrValue) && !isset($value)) ? ($column instanceof SubQuery ? $column->json() : $column) : (isset($operatorOrValue) && !isset($value) ? [$column, '=', $operatorOrValue] : [$column, $operatorOrValue, $value]);
         // Add the % prefix and suffix if query operator is a `like` or `match` query
         if (isset($query[1]) && (('like' === $query[1]) || ('match' === $query[1])) && isset($query[2])) {
-            $query[2] = str_contains((string) $query[2], '%') ? $query[2] : '%'.(string) $query[2].'%';
+            $query[2] = str_contains((string) $query[2], '%') ? $query[2] : '%' . (string) $query[2] . '%';
         }
         $this->appendQuery($method, $query);
     }

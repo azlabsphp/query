@@ -67,6 +67,15 @@ interface FiltersBuilderInterface
     public function exists(string $column, $query = null);
 
     /**
+     * add `or exists` query.
+     *
+     * @param string|\Closure(self $builder):self $query
+     *
+     * @return self
+     */
+    public function orExists(string $column, $query = null);
+
+    /**
      * add `not exists` query.
      *
      * @param string|\Closure(self $builder):self $query
@@ -74,6 +83,15 @@ interface FiltersBuilderInterface
      * @return self
      */
     public function notExists(string $column, $query = null);
+
+    /**
+     * add `or not exists` query.
+     *
+     * @param string|\Closure(self $builder):self $query
+     *
+     * @return self
+     */
+    public function orNotExists(string $column, $query = null);
 
     /**
      * add `in` query.

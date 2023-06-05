@@ -47,7 +47,7 @@ class Queryable implements AbstractQueryable
         $this->id = $id ?? 'id';
         $this->columns = $columns ?? [];
         $this->relations = $relations ?? [];
-        $this->table;
+        $this->table = $table;
     }
 
     /**
