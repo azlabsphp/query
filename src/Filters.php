@@ -72,15 +72,26 @@ class Filters
         // exists
         'exists' => 'exists',
         'has' => 'exists',
+        'orExists' => 'orExists',
+        'orexists' => 'orExists',
         'whereHas' => 'exists',
         'wherehas' => 'exists',
+        'orWhereHas' => 'orExists',
+        'orwherehas' => 'orExists',
 
         // not exists
         'notExists' => 'notExists',
         'notexists' => 'notExists',
+        'orNotExists' => 'orNotExists',
+        'ornotexists' => 'orNotExists',
         'whereDoesntHave' => 'notExists',
         'wheredoesnthave' => 'notExists',
+        'orWhereDoesntHave' => 'orNotExists',
+        'orwheredoesnthave' => 'orNotExists',
         'doesnthave' => 'notExists',
+        'doesntHave' => 'notExists',
+        'ordoesnthave' => 'orNotExists',
+        'orDoesntHave' => 'orNotExists',
 
         // sort
         'sort' => 'sort',
