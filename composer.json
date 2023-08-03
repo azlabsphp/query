@@ -30,12 +30,12 @@
     "require": {
         "drewlabs/collections": "^0.2.3",
         "drewlabs/contracts": "^0.2.5",
-        "drewlabs/core-helpers": "^0.2.2"
+        "drewlabs/core-helpers": "^0.2.2",
+        "drewlabs/query-contracts": "^0.2.0"
     },
     "prefer-stable": true,
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true
-    },
-    "extra": {}
+    }
 }
