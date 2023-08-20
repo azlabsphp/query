@@ -18,13 +18,28 @@ use PHPUnit\Framework\TestCase;
 
 class PreparesFiltersBagTest extends TestCase
 {
-    public function test_build_from_query_parameters()
+    public function test_build_sub_or_query_from_query_parameters()
     {
         $filters = PreparesFiltersBag::from_Query_Parameters(new Person(), new class() {
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
                 'addresses__email' => 'azandrewdevelopper@gmail.com',
+            ];
+            use ViewModel;
+        });
+        $this->assertTrue('addresses' === $filters['orExists'][0]['column']);
+        $this->assertTrue(is_array($filters['orExists'][0]['match']));
+        $this->assertSame($filters['or'][0], ['lastname', 'like', '%Azandrew%']);
+    }
+
+    public function test_build_sub_and_query_from_query_parameters()
+    {
+        $filters = PreparesFiltersBag::from_Query_Parameters(new Person(), new class() {
+            private $inputs = [
+                'lastname' => 'Azandrew',
+                'age' => 29,
+                'addresses__email' => '&&:azandrewdevelopper@gmail.com',
             ];
             use ViewModel;
         });

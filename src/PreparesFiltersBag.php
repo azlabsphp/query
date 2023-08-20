@@ -136,6 +136,11 @@ final class PreparesFiltersBag
             if (('exists' === $prev) && ('or' === $curr)) {
                 return -1;
             }
+
+            if (('orExists' === $prev) && ('or' === $curr)) {
+                return -1;
+            }
+
             if ('or' === $prev) {
                 return 1;
             }
@@ -195,8 +200,9 @@ final class PreparesFiltersBag
             [$name, $column] = [Str::beforeLast('__', $key), Str::afterLast('__', $key)];
             $name = Str::replace([':', '%', '__'], '.', $name ?? '');
             if (null !== $column && (false !== array_search(Str::contains($name, '.') ? Str::before('.', $name) : $name, $queryable->getDeclaredRelations(), true))) {
+                $existsQuery = static::getSubQueryMethod($value);
                 [$operator, $value, $method] = static::operatorValueTuple($value);
-                $array['exists'][] = ['column' => $name, 'match' => ['method' => \is_array($value) ? 'in' : $method ?? 'and', 'params' => [$column, $operator, $value]]];
+                $array[$existsQuery][] = ['column' => $name, 'match' => ['method' => \is_array($value) ? 'in' : $method ?? 'and', 'params' => [$column, $operator, $value]]];
             }
         }
 
@@ -239,7 +245,7 @@ final class PreparesFiltersBag
         // If the operator is a like operator, we removes any % from start and end of value
         // And append our own. We also make sure the operator is like instead of =like
         if (('=like' === $operator) || ('like' === $operator)) {
-            [$value, $operator] = ['%'.trim($value, '%').'%', 'like'];
+            [$value, $operator] = ['%' . trim($value, '%') . '%', 'like'];
         } elseif ('==' === $operator) {
             $operator = '=';
         }
@@ -258,5 +264,16 @@ final class PreparesFiltersBag
         foreach ($default ?? [] as $key => $value) {
             yield Filters::get($key) => $callback($value);
         }
+    }
+
+    /**
+     * Get sub query method based on the provided value
+     * 
+     * @param mixed $value 
+     * @return string 
+     */
+    private static function getSubQueryMethod($value)
+    {
+        return Str::startsWith((string) $value, "and:") || Str::startsWith((string) $value, "&&:") ? 'exists' : 'orExists';
     }
 }
