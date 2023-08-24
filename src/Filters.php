@@ -126,6 +126,12 @@ class Filters
 
         // Limit query
         'limit' => 'limit',
+
+        // Aggregation query
+        'aggregate' => 'aggregate',
+        'aggregate$' => 'aggregate',
+        'agg$' => 'aggregate',
+        'agg' => 'aggregate'
     ];
 
     /**
