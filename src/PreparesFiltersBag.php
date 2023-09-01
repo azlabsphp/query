@@ -245,7 +245,7 @@ final class PreparesFiltersBag
         // If the operator is a like operator, we removes any % from start and end of value
         // And append our own. We also make sure the operator is like instead of =like
         if (('=like' === $operator) || ('like' === $operator)) {
-            [$value, $operator] = ['%' . trim($value, '%') . '%', 'like'];
+            [$value, $operator] = ['%'.trim($value, '%').'%', 'like'];
         } elseif ('==' === $operator) {
             $operator = '=';
         }
@@ -267,13 +267,14 @@ final class PreparesFiltersBag
     }
 
     /**
-     * Get sub query method based on the provided value
-     * 
-     * @param mixed $value 
-     * @return string 
+     * Get sub query method based on the provided value.
+     *
+     * @param mixed $value
+     *
+     * @return string
      */
     private static function getSubQueryMethod($value)
     {
-        return Str::startsWith((string) $value, "and:") || Str::startsWith((string) $value, "&&:") ? 'exists' : 'orExists';
+        return Str::startsWith((string) $value, 'and:') || Str::startsWith((string) $value, '&&:') ? 'exists' : 'orExists';
     }
 }

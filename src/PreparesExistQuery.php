@@ -23,11 +23,8 @@ class PreparesExistQuery implements PreparesQuery
             return [$params];
         }
 
-        $isKvPair = array_keys($params) !== range(0, \count($params) - 1);
-        if ($isKvPair && isset($params['match'], $params['column'])) {
-            return (new PreparesSubQuery())($params);
-        }
-    
-        return $params;
+        // Case `params` is a not key - value pair, we, we check if it's an array list and perform a reduce
+        // transformation on the array list to create the prepared subquery
+        return (new PreparesSubQuery())($params);
     }
 }

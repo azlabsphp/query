@@ -131,7 +131,7 @@ class Filters
         'aggregate' => 'aggregate',
         'aggregate$' => 'aggregate',
         'agg$' => 'aggregate',
-        'agg' => 'aggregate'
+        'agg' => 'aggregate',
     ];
 
     /**

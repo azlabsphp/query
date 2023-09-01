@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
-use Closure;
 use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
@@ -21,13 +20,20 @@ class PreparesSubQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
-        if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
-            return array_map(static function ($params) {
-                return [$params['column'], static::subQueryFactory($params['match'])];
-            }, $params);
+        if (!($isKvPair = $this->isKvPair($params)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
+            return array_reduce($params, function (array $carry, array $current) {
+                if (empty($current)) {
+                    return $carry;
+                }
+
+                // Compile query parameters
+                $carry[] = $this->prepareSubQueryParams($current);
+
+                return $carry;
+            }, []);
         }
 
-        return [$params['column'], static::subQueryFactory($params['match'])];
+        return $this->prepareSubQueryParams($params);
     }
 
     /**
@@ -35,17 +41,49 @@ class PreparesSubQuery implements PreparesQuery
      *
      * @param mixed $query
      *
-     * @return Closure(mixed $q): mixed
+     * @return \Closure(mixed $q): mixed
      */
-    public static function subQueryFactory($query)
+    public function subQueryFactory($query)
     {
         return static function (FiltersInterface $instance, $builder) use ($query) {
             // Compiles subquery into dictionnary case the subquery is a string or a list of values
-            $query = (new PreparesMatchQuery)->__invoke($query);
-            [$method, $params] = [$query['method'], $query['params']];
-            // Prepare the query filters into the output variable to ensure method matches supported method
-            $result = PreparesFiltersArray::doPrepare($params, $method = Filters::get($method));
-            return $instance->invoke($method, $builder, $result);
+            $statements = (new PreparesMatchQuery())->__invoke($query);
+            return array_reduce($statements, function($carry, $statement) use ($builder) {
+                // Prepare the query filters into the output variable to ensure method matches supported method
+                $result = PreparesFiltersArray::doPrepare($statement->args(), $method = Filters::get($statement->method()));
+                // Return the returned value of the function invokation on the query builder
+                return $carry->invoke($method, $builder, $result);
+            }, $instance);
         };
+    }
+
+    /**
+     * Checks if an array is a key value pair array.
+     *
+     * @return bool
+     */
+    private function isKvPair(array $value)
+    {
+        return \is_array($value) && array_keys($value) !== range(0, \count($value) - 1);
+    }
+
+    /**
+     * Prepares subquery parameters.
+     *
+     * @param mixed $value
+     *
+     * @throws \Exception
+     *
+     * @return array
+     */
+    private function prepareSubQueryParams($value)
+    {
+        if (null === ($column = $value['column'] ?? $value[key($value)])) {
+            throw new \Exception('Bad sub query, column is not provided');
+        }
+        $match = $value['match'] ?? (\count($value) >= 2 ? array_values($value)[1] : null);
+
+        // Returns the compiled query array
+        return $match ? [$column, $this->subQueryFactory($match)] : [$column];
     }
 }

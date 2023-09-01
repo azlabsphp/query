@@ -120,7 +120,7 @@ class PreparesFiltersArray
     public static function doPrepare($params, string $method)
     {
         switch ($method) {
-                // Default group
+            // Default group
             case 'and':
             case 'date':
             case 'orDate':

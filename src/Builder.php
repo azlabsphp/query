@@ -66,8 +66,8 @@ final class Builder implements FiltersBuilderInterface
      * Add an or query filter to the builder.
      *
      * @param string|SubQuery|\Closure(self $builder):self $column
-     * @param string|null $operator
-     * @param mixed|null  $value
+     * @param string|null                                  $operator
+     * @param mixed|null                                   $value
      *
      * @return self
      */
@@ -212,13 +212,13 @@ final class Builder implements FiltersBuilderInterface
         return $this;
     }
 
-
     public function notExists(string $column, $query = null)
     {
         $this->setExistQuery($column, $query, 'notExists');
 
         return $this;
     }
+
     public function orNotExists(string $column, $query = null)
     {
         $this->setExistQuery($column, $query, 'orNotExists');
@@ -414,7 +414,7 @@ final class Builder implements FiltersBuilderInterface
         $query = (!isset($operatorOrValue) && !isset($value)) ? ($column instanceof SubQuery ? $column->json() : $column) : (isset($operatorOrValue) && !isset($value) ? [$column, '=', $operatorOrValue] : [$column, $operatorOrValue, $value]);
         // Add the % prefix and suffix if query operator is a `like` or `match` query
         if (isset($query[1]) && (('like' === $query[1]) || ('match' === $query[1])) && isset($query[2])) {
-            $query[2] = str_contains((string) $query[2], '%') ? $query[2] : '%' . (string) $query[2] . '%';
+            $query[2] = str_contains((string) $query[2], '%') ? $query[2] : '%'.(string) $query[2].'%';
         }
         $this->appendQuery($method, $query);
     }
