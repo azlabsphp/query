@@ -20,6 +20,11 @@ class PreparesSubQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
+        // Case the query parameters is empty, return the parameters as it's
+        if (empty($params)) {
+            return $params;
+        }
+    
         if (!($isKvPair = $this->isKvPair($params)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
             return array_reduce($params, function (array $carry, array $current) {
                 if (empty($current)) {
@@ -48,7 +53,7 @@ class PreparesSubQuery implements PreparesQuery
         return static function (FiltersInterface $instance, $builder) use ($query) {
             // Compiles subquery into dictionnary case the subquery is a string or a list of values
             $statements = (new PreparesMatchQuery())->__invoke($query);
-            return array_reduce($statements, function($carry, $statement) use ($builder) {
+            return array_reduce($statements, function ($carry, $statement) use ($builder) {
                 // Prepare the query filters into the output variable to ensure method matches supported method
                 $result = PreparesFiltersArray::doPrepare($statement->args(), $method = Filters::get($statement->method()));
                 // Return the returned value of the function invokation on the query builder

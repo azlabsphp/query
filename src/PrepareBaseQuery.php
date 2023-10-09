@@ -19,6 +19,11 @@ final class PrepareBaseQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
+        // Case the query parameters is empty, return the parameters as it's
+        if (empty($params)) {
+            return $params;
+        }
+    
         $isKvPair = array_keys($params) !== range(0, \count($params) - 1);
         if (\is_array($params) && !$isKvPair && (array_filter($params, 'is_array') === $params)) {
             return array_map(static function ($q) {
@@ -26,10 +31,10 @@ final class PrepareBaseQuery implements PreparesQuery
             }, $params);
         }
         if ($isKvPair && isset($params['match'])) {
-            return PreparesSubQuery::subQueryFactory($params['match']);
+            return (new PreparesSubQuery)->subQueryFactory($params['match']);
         }
         if ($isKvPair) {
-            return PreparesSubQuery::subQueryFactory($params);
+            return (new PreparesSubQuery)->subQueryFactory($params);
         }
 
         return $params;

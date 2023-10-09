@@ -19,6 +19,11 @@ class PreparesExistQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
+        // Case the query parameters is empty, return the parameters as it's
+        if (empty($params)) {
+            return $params;
+        }
+
         if (!\is_array($params)) {
             return [$params];
         }
