@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 class BuilderTest extends TestCase
 {
 
-    public function test_where_clause()
+    public function test_builder_where_clause()
     {
         $builder = QueryBuilder::new()
             ->eq('title', 'Lorem Ipsum')
@@ -22,7 +22,7 @@ class BuilderTest extends TestCase
         $result = $builder->getQuery('and') ?? [];
         $this->assertEquals(['title', '=', 'Lorem Ipsum'], $result[0]);
         $this->assertEquals(['id', '<>', 10], $result[1]);
-        $this->assertEquals('query', $result[2]['method']);
+        $this->assertEquals('and', $result[2]['method']);
         $this->assertEquals(['tags', ['I', 'L', 'F']], $result[2]['params']['in'][0]);
     }
 
@@ -56,7 +56,7 @@ class BuilderTest extends TestCase
         $this->assertEquals(['id', [90, 120, 167]], $notInQuery[0]);
     }
 
-    public function test_exists_clause()
+    public function test_builder_exists_clause()
     {
         $builder = QueryBuilder::new()->exists('comments', function (QueryBuilder $query) {
             return $query->gte('likes', 100);

@@ -56,7 +56,7 @@ final class Builder implements FiltersBuilderInterface
 
     public function and($column, string $operator = null, $value = null)
     {
-        $column = $column instanceof \Closure ? new SubQuery('query', $column(static::new())->getQuery()) : $column;
+        $column = $column instanceof \Closure ? new SubQuery('and', $column(static::new())->getQuery()) : $column;
         $this->setWhereQuery('and', $column, $operator, $value);
 
         return $this;
@@ -73,7 +73,7 @@ final class Builder implements FiltersBuilderInterface
      */
     public function or($column, $operator = null, $value = null)
     {
-        $column = $column instanceof \Closure ? new SubQuery('query', $column(static::new())->getQuery()) : $column;
+        $column = $column instanceof \Closure ? new SubQuery('or', $column(static::new())->getQuery()) : $column;
         $this->setWhereQuery('or', $column, $operator, $value);
 
         return $this;
@@ -392,7 +392,7 @@ final class Builder implements FiltersBuilderInterface
      */
     private function setExistQuery(string $as, $query, $method = 'exists')
     {
-        $query = $query instanceof \Closure ? new SubQuery('query', $query(static::new())->getQuery()) : $query;
+        $query = $query instanceof \Closure ? new SubQuery('and', $query(static::new())->getQuery()) : $query;
         // Case the query is a subquery object we returns the json representation of the query
         $query = $query instanceof SubQuery ? ['column' => $as, 'match' => $query->json()] : (null === $query ? $as : [$as, $query]);
 

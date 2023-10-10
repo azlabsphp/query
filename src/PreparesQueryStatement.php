@@ -15,7 +15,7 @@ namespace Drewlabs\Query;
 
 use Drewlabs\Query\Contracts\PreparesQuery;
 
-class PreparesMatchQuery implements PreparesQuery
+class PreparesQueryStatement implements PreparesQuery
 {
     /**
      * {@inheritDoc}
@@ -29,7 +29,7 @@ class PreparesMatchQuery implements PreparesQuery
         if (\is_array($params) && !empty($params)) {
             $method = $params['method'] ?? $params[key($params)];
             $args = $params['params'] ?? (\count($params) >= 2 ? array_slice(array_values($params), 1) : []);
-            return [(new QueryStatement($method, ...$args))];
+            return [(new QueryStatement($method, $args))];
         }
 
         // Case the params is not a string we throw a type error

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
-use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
 class PreparesSubQuery implements PreparesQuery
@@ -39,27 +38,6 @@ class PreparesSubQuery implements PreparesQuery
         }
 
         return $this->prepareSubQueryParams($params);
-    }
-
-    /**
-     * Creates a factory function that get call on query filters.
-     *
-     * @param mixed $query
-     *
-     * @return \Closure(mixed $q): mixed
-     */
-    public function subQueryFactory($query)
-    {
-        return static function (FiltersInterface $instance, $builder) use ($query) {
-            // Compiles subquery into dictionnary case the subquery is a string or a list of values
-            $statements = (new PreparesMatchQuery())->__invoke($query);
-            return array_reduce($statements, function ($carry, $statement) use ($builder) {
-                // Prepare the query filters into the output variable to ensure method matches supported method
-                $result = PreparesFiltersArray::doPrepare($statement->args(), $method = Filters::get($statement->method()));
-                // Return the returned value of the function invokation on the query builder
-                return $carry->invoke($method, $builder, $result);
-            }, $instance);
-        };
     }
 
     /**
@@ -89,6 +67,6 @@ class PreparesSubQuery implements PreparesQuery
         $match = $value['match'] ?? (\count($value) >= 2 ? array_values($value)[1] : null);
 
         // Returns the compiled query array
-        return $match ? [$column, $this->subQueryFactory($match)] : [$column];
+        return $match ? [$column, MatchSubqueryFactory::new()->create($match)] : [$column];
     }
 }

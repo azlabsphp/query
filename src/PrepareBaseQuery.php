@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
 final class PrepareBaseQuery implements PreparesQuery
@@ -30,11 +31,17 @@ final class PrepareBaseQuery implements PreparesQuery
                 return (new static())($q);
             }, $params);
         }
+
         if ($isKvPair && isset($params['match'])) {
-            return (new PreparesSubQuery)->subQueryFactory($params['match']);
+            return MatchSubqueryFactory::new()->create($params['match']);
         }
         if ($isKvPair) {
-            return (new PreparesSubQuery)->subQueryFactory($params);
+            return function(FiltersInterface $instance, $builder) use ($params) {
+                return QueryStatementsReducer::new(array_reduce(array_keys($params), function($carry, $key) use ($params) {
+                    $carry[] = new QueryStatement($key, $params[$key]);
+                    return $carry;
+                }, []))->call($instance, $builder);
+            };
         }
 
         return $params;

@@ -30,9 +30,9 @@ class QueryStatement
     /**
      * Create new query statement instance.
      *
-     * @param mixed $args
+     * @param array $args
      */
-    public function __construct(string $method, ...$args)
+    public function __construct(string $method, array $args)
     {
         $this->method = $method;
         $this->args = $args;
@@ -66,7 +66,7 @@ class QueryStatement
             return trim($p);
         }, explode(',', $arguments));
 
-        return new QueryStatement($method, ...$args);
+        return new QueryStatement($method, $args);
     }
 
     /**
