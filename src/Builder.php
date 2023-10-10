@@ -69,11 +69,11 @@ final class Builder implements FiltersBuilderInterface
      * @param string|null                                  $operator
      * @param mixed|null                                   $value
      *
-     * @return self
+     * @return static
      */
     public function or($column, $operator = null, $value = null)
     {
-        $column = $column instanceof \Closure ? new SubQuery('or', $column(static::new())->getQuery()) : $column;
+        $column = $column instanceof \Closure ? new SubQuery('and', $column(static::new())->getQuery()) : $column;
         $this->setWhereQuery('or', $column, $operator, $value);
 
         return $this;
@@ -85,7 +85,7 @@ final class Builder implements FiltersBuilderInterface
      * @param mixed $value
      * @param bool  $and   Specify if an or/and query is constructed
      *
-     * @return self
+     * @return static
      */
     public function eq(string $column, $value = null, $and = true)
     {
@@ -98,7 +98,7 @@ final class Builder implements FiltersBuilderInterface
      * @param mixed $value
      * @param bool  $and   Specify if an or/and query is constructed
      *
-     * @return self
+     * @return static
      */
     public function neq(string $column, $value = null, $and = true)
     {
@@ -111,7 +111,7 @@ final class Builder implements FiltersBuilderInterface
      * @param mixed $value
      * @param bool  $and   Specify if an or/and query is constructed
      *
-     * @return self
+     * @return static
      */
     public function lt(string $column, $value = null, $and = true)
     {
@@ -124,7 +124,7 @@ final class Builder implements FiltersBuilderInterface
      * @param mixed $value
      * @param bool  $and   Specify if an or/and query is constructed
      *
-     * @return self
+     * @return static
      */
     public function lte(string $column, $value = null, $and = true)
     {
@@ -137,7 +137,7 @@ final class Builder implements FiltersBuilderInterface
      * @param mixed $value
      * @param bool  $and   Specify if an or/where query is constructed
      *
-     * @return self
+     * @return static
      */
     public function gt(string $column, $value = null, $and = true)
     {
@@ -150,7 +150,7 @@ final class Builder implements FiltersBuilderInterface
      * @param mixed $value
      * @param bool  $and   Specify if an or/where query is constructed
      *
-     * @return self
+     * @return static
      */
     public function gte(string $column, $value = null, $and = true)
     {
@@ -163,7 +163,7 @@ final class Builder implements FiltersBuilderInterface
      * @param mixed $value
      * @param bool  $and   Specify if an or/where query is constructed
      *
-     * @return self
+     * @return static
      */
     public function like(string $column, $value = null, $and = true)
     {
@@ -310,7 +310,7 @@ final class Builder implements FiltersBuilderInterface
      *
      * @param mixed $columns
      *
-     * @return self
+     * @return static
      */
     public function select(...$columns)
     {
@@ -325,7 +325,7 @@ final class Builder implements FiltersBuilderInterface
      *
      * @param string[] $columns
      *
-     * @return self
+     * @return static
      */
     public function excludes(...$columns)
     {

@@ -16,6 +16,9 @@ namespace Drewlabs\Query;
 use Closure;
 use Drewlabs\Query\Contracts\FiltersInterface;
 
+/**
+ * @internal
+ */
 class MatchSubqueryFactory
 {
     /**

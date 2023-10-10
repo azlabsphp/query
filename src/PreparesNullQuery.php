@@ -16,6 +16,9 @@ namespace Drewlabs\Query;
 use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
+/**
+ * @internal
+ */
 class PreparesNullQuery implements PreparesQuery
 {
     public function __invoke($params)

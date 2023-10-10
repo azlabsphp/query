@@ -20,6 +20,9 @@ use Drewlabs\Query\Contracts\Queryable;
 use Drewlabs\Query\Utils\FiltersBag;
 use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
 
+/**
+ * @internal
+ */
 final class PreparesFiltersBag
 {
     /**

@@ -16,6 +16,9 @@ namespace Drewlabs\Query;
 use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
+/**
+ * @internal
+ */
 final class PreparesBaseQuery implements PreparesQuery
 {
     public function __invoke($params)

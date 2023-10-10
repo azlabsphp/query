@@ -15,6 +15,9 @@ namespace Drewlabs\Query;
 
 use Drewlabs\Query\Contracts\PreparesQuery;
 
+/**
+ * @internal
+ */
 class PreparesQueryStatement implements PreparesQuery
 {
     /**

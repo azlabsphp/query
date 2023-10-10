@@ -16,6 +16,9 @@ namespace Drewlabs\Query;
 use Drewlabs\Core\Helpers\Iter;
 use Drewlabs\Query\Contracts\CompilesQueryParameter;
 
+/**
+ * @internal
+ */
 class ConditionQuery implements CompilesQueryParameter
 {
     public function compile($params)
