@@ -125,7 +125,7 @@ class PreparesFiltersArray
             case 'date':
             case 'orDate':
             case 'or':
-                return (new PrepareBaseQuery())($params);
+                return (new PreparesBaseQuery())($params);
                 // Exists group
             case 'exists':
             case 'orExists':
