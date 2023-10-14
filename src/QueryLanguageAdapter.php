@@ -48,11 +48,6 @@ final class QueryLanguageAdapter implements QueryLanguageInterface
     private $language;
 
     /**
-     * @var bool
-     */
-    private $cursor = false;
-
-    /**
      * Creates class instance.
      *
      * @return void
@@ -84,6 +79,7 @@ final class QueryLanguageAdapter implements QueryLanguageInterface
 
     public function aggregate(array $query = [], string $aggregation = AggregationMethods::COUNT, ...$args)
     {
+        // TODO: Provide implementation
     }
 
     public function createMany(array $attributes)

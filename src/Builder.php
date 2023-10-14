@@ -240,13 +240,69 @@ final class Builder implements FiltersBuilderInterface
      * named after `$as` variable to the query result.
      *
      * @param string $column
-     * @param string $as
+     * @param string $relation
      *
      * @return static
      */
-    public function count($column = '*', string $as = null)
+    public function count($column = '*', string $relation = null)
     {
-        $this->appendQuery(__FUNCTION__, null !== $as ? [$column, $as] : [$column]);
+        $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
+
+        return $this;
+    }
+
+    /**
+     * Compute the minimum of a given column
+     * 
+     * @param string $column 
+     * @param string|null $relation 
+     * @return static
+     */
+    public function min(string $column, string $relation = null)
+    {
+        $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
+
+        return $this;
+    }
+
+    /**
+     * Compute the maximum of a given column
+     * 
+     * @param string $column 
+     * @param string|null $relation 
+     * @return static
+     */
+    public function max(string $column, string $relation = null)
+    {
+        $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
+
+        return $this;
+    }
+
+    /**
+     * Compute the sum of a given column
+     * 
+     * @param string $column 
+     * @param string|null $relation 
+     * @return static
+     */
+    public function sum(string $column, string $relation = null)
+    {
+        $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
+
+        return $this;
+    }
+
+    /**
+     * Compute the average of a given column
+     * 
+     * @param string $column 
+     * @param string|null $relation 
+     * @return static
+     */
+    public function avg(string $column, string $relation = null)
+    {
+        $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
 
         return $this;
     }
@@ -414,7 +470,7 @@ final class Builder implements FiltersBuilderInterface
         $query = (!isset($operatorOrValue) && !isset($value)) ? ($column instanceof SubQuery ? $column->json() : $column) : (isset($operatorOrValue) && !isset($value) ? [$column, '=', $operatorOrValue] : [$column, $operatorOrValue, $value]);
         // Add the % prefix and suffix if query operator is a `like` or `match` query
         if (isset($query[1]) && (('like' === $query[1]) || ('match' === $query[1])) && isset($query[2])) {
-            $query[2] = str_contains((string) $query[2], '%') ? $query[2] : '%'.(string) $query[2].'%';
+            $query[2] = str_contains((string) $query[2], '%') ? $query[2] : '%' . (string) $query[2] . '%';
         }
         $this->appendQuery($method, $query);
     }
