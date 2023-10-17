@@ -19,11 +19,11 @@ class BuilderTest extends TestCase
                     ->gte('groups', 10);
             });
 
-        $result = $builder->getQuery('and') ?? [];
-        $this->assertEquals(['title', '=', 'Lorem Ipsum'], $result[0]);
-        $this->assertEquals(['id', '<>', 10], $result[1]);
-        $this->assertEquals('and', $result[2]['method']);
-        $this->assertEquals(['tags', ['I', 'L', 'F']], $result[2]['params']['in'][0]);
+        $rawQuery = $builder->getRawQuery('and') ?? [];
+        $this->assertEquals(['title', '=', 'Lorem Ipsum'], $rawQuery[0]);
+        $this->assertEquals(['id', '<>', 10], $rawQuery[1]);
+        $this->assertEquals('and', $rawQuery[2]['method']);
+        $this->assertEquals(['tags', ['I', 'L', 'F']], $rawQuery[2]['params']['in'][0]);
     }
 
     public function test_or_clause()
@@ -63,13 +63,17 @@ class BuilderTest extends TestCase
         });
         $query = $builder->getQuery();
         $this->assertTrue(array_key_exists('exists', $query));
-        $this->assertEquals(['likes', '>=', 100], $query['exists'][0]['match']['params']['and'][0]);
+        $this->assertEquals('comments', $query['exists'][0][0]);
+        $this->assertInstanceOf(Closure::class, $query['exists'][0][1]);
+
+        $rawQuery = $builder->getRawQuery();
+        $this->assertEquals(['likes', '>=', 100], $rawQuery['exists'][0]['match']['params']['and'][0]);
     }
 
-    public function test_sort_clause()
+    public function test_builder_sort_clause()
     {
         $builder = QueryBuilder::new()->sort('created_at', -1);
         $result = $builder->getQuery('sort') ?? [];
-        $this->assertEquals(['order' => 'DESC', 'by' => 'created_at'], $result);
+        $this->assertEquals(['order' => 'desc', 'by' => 'created_at'], $result);
     }
 }

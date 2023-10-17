@@ -36,7 +36,7 @@ final class PreparesOrderByQuery implements PreparesQuery
         $by = $params['column'] ?? ($params['by'] ?? 'updated_at');
         $order = $params['order'] ?? 'desc';
 
-        return ['by' => $by, 'order' => $order < 0 ? 'desc' : 'asc'];
+        return ['by' => $by, 'order' => (is_numeric($order) && $order < 0) || (strtolower((string)$order) === 'desc') ? 'desc' : 'asc'];
     }
 
     /**

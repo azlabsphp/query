@@ -229,7 +229,7 @@ final class Builder implements FiltersBuilderInterface
     public function sort(string $column, int $order = 1)
     {
         $this->__QUERY__ = $this->__QUERY__ ?? [];
-        $orderstr = (int) $order < 0 ? 'DESC' : 'ASC';
+        $orderstr = (int) $order < 0 ? 'desc' : 'asc';
         $this->__QUERY__['sort'] = ['order' => $orderstr, 'by' => $column];
 
         return $this;
@@ -392,13 +392,23 @@ final class Builder implements FiltersBuilderInterface
     }
 
     /**
-     * Get __QUERY__ property value.
+     * Get the raw __QUERY__ property value.
+     *
+     * @return array|mixed
+     */
+    public function getRawQuery(string $method = null)
+    {
+        return $method ? ($this->__QUERY__[$method] ?? null) : ($this->__QUERY__ ?? []);
+    }
+
+    /**
+     * Get compiled query.
      *
      * @return array|mixed
      */
     public function getQuery(string $method = null)
     {
-        return $method ? $this->__QUERY__[$method] ?? null : $this->__QUERY__ ?? [];
+        return $method ? (isset($this->__QUERY__[$method]) ? PreparesFiltersArray::doPrepare($this->__QUERY__[$method], $method) : null) : PreparesFiltersArray::new($this->__QUERY__)->call() ?? [];
     }
 
     /**
