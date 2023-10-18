@@ -377,6 +377,27 @@ final class Builder implements FiltersBuilderInterface
     }
 
     /**
+     * Add a distinct clause to the query builder
+     * 
+     * @param mixed $columns 
+     * @return static 
+     */
+    public function distinct(...$columns)
+    {
+        if (empty($columns)) {
+            $this->__QUERY__[__FUNCTION__] = true;
+            return $this;
+        }
+
+        $values = $this->__QUERY__[__FUNCTION__] ?? [];
+        $values  = is_array($values) ? $values : [$values];
+        $this->__QUERY__[__FUNCTION__] = array_values(array_filter($this->flatten(array_merge($values, $columns)), function ($column) {
+            return is_string($column);
+        }));
+        return $this;
+    }
+
+    /**
      * Set the list of columns to exclude from the rest query result.
      *
      * @param string[] $columns

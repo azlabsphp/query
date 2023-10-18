@@ -25,51 +25,51 @@ class Filters
      */
     public const QUERY_FILTERS = [
 
-        // and
+        // and clause
         'and' => 'and',
         'where' => 'and',
 
-        // or
+        // or clause
         'or' => 'or',
         'orWhere' => 'or',
         'orwhere' => 'or',
 
-        // in
+        // in clause
         'in' => 'in',
         'whereIn' => 'in',
         'wherein' => 'in',
 
-        //  not in
+        //  not in clause
         'notIn' => 'notIn',
         'notin' => 'notIn',
         'whereNotIn' => 'notIn',
         'wherenotin' => 'notIn',
 
-        // null
+        // null clause
         'isNull' => 'isNull',
         'isnull' => 'isNull',
         'whereNull' => 'isNull',
         'wherenull' => 'isNull',
 
-        // or null
+        // or null clause
         'orIsNull' => 'orIsNull',
         'orisnull' => 'orIsNull',
         'orWhereNull' => 'orIsNull',
         'orwherenull' => 'orIsNull',
 
-        // not null
+        // not null clause
         'notNull' => 'notNull',
         'notnull' => 'notNull',
         'whereNotNull' => 'notNull',
         'wherenotnull' => 'notNull',
 
-        // or not null
+        // or not null clause
         'orNotNull' => 'orNotNull',
         'ornotnull' => 'orNotNull',
         'orWhereNotNull' => 'orNotNull',
         'orwherenotnull' => 'orNotNull',
 
-        // exists
+        // exists clause
         'exists' => 'exists',
         'has' => 'exists',
         'orExists' => 'orExists',
@@ -79,7 +79,7 @@ class Filters
         'orWhereHas' => 'orExists',
         'orwherehas' => 'orExists',
 
-        // not exists
+        // not exists clause
         'notExists' => 'notExists',
         'notexists' => 'notExists',
         'orNotExists' => 'orNotExists',
@@ -93,41 +93,44 @@ class Filters
         'ordoesnthave' => 'orNotExists',
         'orDoesntHave' => 'orNotExists',
 
-        // sort
+        // sort clause
         'sort' => 'sort',
         'orderBy' => 'sort',
         'orderby' => 'sort',
 
-        // date
+        // date clause
         'date' => 'date',
         'whereDate' => 'date',
         'wheredate' => 'date',
 
-        // or date
+        // or date clause
         'orDate' => 'orDate',
         'ordate' => 'orDate',
         'orWhereDate' => 'orDate',
         'orwheredate' => 'orDate',
 
-        // between
+        // between clause
         'between' => 'between',
         'whereBetween' => 'between',
         'wherebetween' => 'between',
 
-        // group
+        // group clause
         'group' => 'group',
         'groupBy' => 'group',
         'groupby' => 'group',
 
-        // join
+        // join clause
         'join' => 'join',
         'rightjoin' => 'rightJoin',
         'leftjoin' => 'leftJoin',
 
-        // Limit query
+        // Limit clause
         'limit' => 'limit',
 
-        // Aggregation query
+        // Distinct clause
+        'distinct' => 'distinct',
+
+        // Aggregation clause
         'aggregate' => 'aggregate',
         'aggregate$' => 'aggregate',
         'agg$' => 'aggregate',

@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 class BuilderTest extends TestCase
 {
 
-    public function test_builder_where_clause()
+    public function test_builder_builder_where_clause()
     {
         $builder = QueryBuilder::new()
             ->eq('title', 'Lorem Ipsum')
@@ -26,7 +26,7 @@ class BuilderTest extends TestCase
         $this->assertEquals(['tags', ['I', 'L', 'F']], $rawQuery[2]['params']['in'][0]);
     }
 
-    public function test_or_clause()
+    public function test_builder_or_clause()
     {
         $builder = QueryBuilder::new()
             ->and('title', 'Lorem Ipsum')
@@ -38,7 +38,7 @@ class BuilderTest extends TestCase
         $this->assertEquals(['id', '=', 10], $orResult[0]);
     }
 
-    public function test_not_clause()
+    public function test_builder_not_clause()
     {
         $builder = QueryBuilder::new()->or('id', 10)->neq('likes', 4);
         $result = $builder->getQuery('and') ?? [];
@@ -47,7 +47,7 @@ class BuilderTest extends TestCase
         $this->assertEquals(['id', '=', 10], $orResult[0]);
     }
 
-    public function test_in_clause()
+    public function test_builder_in_clause()
     {
         $builder = QueryBuilder::new()->in('likes', [5, 10])->notIn('id', [90, 120, 167]);
         $result = $builder->getQuery('in') ?? [];
@@ -75,5 +75,13 @@ class BuilderTest extends TestCase
         $builder = QueryBuilder::new()->sort('created_at', -1);
         $result = $builder->getQuery('sort') ?? [];
         $this->assertEquals(['order' => 'desc', 'by' => 'created_at'], $result);
+    }
+
+    public function test_builder_distinct_clause()
+    {
+        $builder = QueryBuilder::new()->select(['*'])->distinct();
+        $this->assertEquals(true, $builder->getQuery('distinct'));
+        $builder->distinct('name');
+        $this->assertEquals(['name'], $builder->getQuery('distinct'));
     }
 }
