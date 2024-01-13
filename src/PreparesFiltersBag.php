@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Core\Helpers\Str;
 use Drewlabs\Query\Contracts\FilterBagInterface;
@@ -181,8 +182,39 @@ final class PreparesFiltersBag
                 return $output;
             }
 
+            // Foreach query methods, make sure the make sure the method is a list of array
+            foreach ([
+                'exists',
+                'whereHas',
+                'and',
+                'where',
+                'or',
+                'orWhere',
+                'in',
+                'whereIn',
+                'notIn',
+                'notin',
+                'whereNotIn',
+                'wherenotin'
+            ] as $name) {
+                if (isset($query[$name])) {
+                    $value = $query[$name];
+                    unset($query[$name]);
+                    $query[Filters::get($name)] = Arr::isList($value) ? $value : [$value];
+                }
+            }
+
             // Prepare the array filters into the output variable
-            PreparesFiltersArray::new($query)->prepareInto($output);
+            $array = [];
+            PreparesFiltersArray::new($query)->prepareInto($array);
+            $output = array_merge_recursive(
+                $array,
+                // We only use or clause, case the query string uses or clause and
+                // `_query` has or clause and does not provide an and clause
+                isset($array['or']) && !isset($array['and']) && isset($output['or']) ?
+                    ['or' => !empty($output) ? [$output] : []] :
+                    ['and' => !empty($output) ? [$output] : []]
+            );
         }
 
         return $output;
@@ -248,7 +280,7 @@ final class PreparesFiltersBag
         // If the operator is a like operator, we removes any % from start and end of value
         // And append our own. We also make sure the operator is like instead of =like
         if (('=like' === $operator) || ('like' === $operator)) {
-            [$value, $operator] = ['%'.trim($value, '%').'%', 'like'];
+            [$value, $operator] = ['%' . trim($value, '%') . '%', 'like'];
         } elseif ('==' === $operator) {
             $operator = '=';
         }
