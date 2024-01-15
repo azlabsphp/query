@@ -56,7 +56,10 @@ class QueryStatementsReducer
             // Prepare the query filters into the output variable to ensure method matches supported method
             $result = PreparesFiltersArray::doPrepare($statement->args(), $method = Filters::get($statement->method()));
             // Return the returned value of the function invokation on the query builder
-            return $carry->invoke($method, $builder, $result);
+            $builder = $carry->invoke($method, $builder, $result);
+
+            // Return the filter builder instance for the iteration
+            return $carry;
         }, $instance);
     }
 
