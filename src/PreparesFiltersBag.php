@@ -271,20 +271,22 @@ final class PreparesFiltersBag
                 break;
             }
         }
+
         if (Str::startsWith((string) $value, 'and:')) {
             [$method, $value] = ['and', Str::after('and:', $value)];
         } elseif (Str::startsWith((string) $value, '&&:')) {
             [$method, $value] = ['and', Str::after('&&:', $value)];
         }
-        $operator = $operator ?? (is_numeric($value) || \is_bool($value) ? '=' : 'like');
+
+        // If no operator is provided, use like query by default
+        $operator = $operator ?? 'like';
+        $operator = strtolower($operator) === '=like' ? 'like' : ($operator == '==' ? '=' : $operator);
         // If the operator is a like operator, we removes any % from start and end of value
         // And append our own. We also make sure the operator is like instead of =like
-        if (('=like' === $operator) || ('like' === $operator)) {
-            [$value, $operator] = ['%' . trim($value, '%') . '%', 'like'];
-        } elseif ('==' === $operator) {
-            $operator = '=';
-        }
-        $method = false !== strtotime((string) $value) ? ('or' === $method ? 'orDate' : 'date') : $method;
+        $value = $operator === 'like' ? '%' . trim(strval($value), '%') . '%' : $value;
+
+        // Here we add is_numeric check because 
+        $method = !is_numeric($value) && false !== strtotime((string) $value) ? ('or' === $method ? 'orDate' : 'date') : $method;
 
         return [$operator, $value, $method];
     }
