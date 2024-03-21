@@ -26,12 +26,13 @@
             "email": "asmyns.platonnas29@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
-        "drewlabs/collections": "^0.2.3",
-        "drewlabs/contracts": "^0.2.5",
-        "drewlabs/core-helpers": "^0.2.2",
-        "drewlabs/query-contracts": "^0.2.0"
+        "php": "^7.2|^8.0",
+        "drewlabs/collections": "^0.3",
+        "drewlabs/contracts": "^0.3",
+        "drewlabs/core-helpers": "^0.3",
+        "drewlabs/query-contracts": "^0.3"
     },
     "prefer-stable": true,
     "config": {
