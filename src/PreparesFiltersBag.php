@@ -17,6 +17,7 @@ use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Core\Helpers\Str;
 use Drewlabs\Query\Contracts\FilterBagInterface;
+use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\Queryable;
 use Drewlabs\Query\Utils\FiltersBag;
 use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
@@ -183,20 +184,22 @@ final class PreparesFiltersBag
             }
 
             // Foreach query methods, make sure the make sure the method is a list of array
-            foreach ([
-                'exists',
-                'whereHas',
-                'and',
-                'where',
-                'or',
-                'orWhere',
-                'in',
-                'whereIn',
-                'notIn',
-                'notin',
-                'whereNotIn',
-                'wherenotin'
-            ] as $name) {
+            foreach (
+                [
+                    'exists',
+                    'whereHas',
+                    'and',
+                    'where',
+                    'or',
+                    'orWhere',
+                    'in',
+                    'whereIn',
+                    'notIn',
+                    'notin',
+                    'whereNotIn',
+                    'wherenotin'
+                ] as $name
+            ) {
                 if (isset($query[$name])) {
                     $value = $query[$name];
                     unset($query[$name]);
@@ -207,13 +210,27 @@ final class PreparesFiltersBag
             // Prepare the array filters into the output variable
             $array = [];
             PreparesFiltersArray::new($query)->prepareInto($array);
+
+            // Case query parameters are provided, we create a factory query builder
+            // which will be invoked with the filter builder instance and the framework
+            // builder adapter
+            $factory = function (FiltersInterface $instance, $builder) use ($output) {
+                $output = $output ?? [];
+                $statements = [];
+                foreach ($output as $key => $value) {
+                    $statements[] = new QueryStatement($key, $value);
+                }
+                // Compiles subquery into dictionnary case the subquery is a string or a list of values
+                return QueryStatementsReducer::new($statements)->call($instance, $builder);
+            };
+
             $output = array_merge_recursive(
                 $array,
                 // We only use or clause, case the query string uses or clause and
                 // `_query` has or clause and does not provide an and clause
                 isset($array['or']) && !isset($array['and']) && isset($output['or']) ?
-                    ['or' => !empty($output) ? [$output] : []] :
-                    ['and' => !empty($output) ? [$output] : []]
+                    ['or' => !empty($output) ? [$factory] : []] :
+                    ['and' => !empty($output) ? [$factory] : []]
             );
         }
 
@@ -237,7 +254,13 @@ final class PreparesFiltersBag
             if (null !== $column && (false !== array_search(Str::contains($name, '.') ? Str::before('.', $name) : $name, $queryable->getDeclaredRelations(), true))) {
                 $existsQuery = static::getSubQueryMethod($value);
                 [$operator, $value, $method] = static::operatorValueTuple($value);
-                $array[$existsQuery][] = ['column' => $name, 'match' => ['method' => \is_array($value) ? 'in' : $method ?? 'and', 'params' => [$column, $operator, $value]]];
+                $array[$existsQuery][] = [
+                    'column' => $name,
+                    'match' => [
+                        'method' => \is_array($value) ? 'in' : 'and',
+                        'params' => [$column, $operator, $value]
+                    ]
+                ];
             }
         }
 
