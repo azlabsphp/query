@@ -28,6 +28,7 @@ class PreparesFiltersBagTest extends TestCase
             ];
             use ViewModel;
         });
+
         $this->assertTrue('addresses' === $filters['orExists'][0]['column']);
         $this->assertTrue(is_array($filters['orExists'][0]['match']));
         $this->assertSame($filters['or'][0], ['lastname', 'like', '%Azandrew%']);

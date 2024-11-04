@@ -11,6 +11,8 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+ namespace Drewlabs\Query\Tests;
+
 use Drewlabs\Query\Columns;
 use PHPUnit\Framework\TestCase;
 

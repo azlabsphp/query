@@ -1,5 +1,7 @@
 <?php
 
+namespace Drewlabs\Query\Tests;
+
 use Drewlabs\Query\Exceptions\MalformedQueryExpression;
 use Drewlabs\Query\PreparesQueryStatement;
 use Drewlabs\Query\QueryStatement;
@@ -44,7 +46,7 @@ class PreparesMatchQueryTest extends TestCase
 
     public function test_prepares_match_query_on_invalid_type_syntax()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(\TypeError::class);
         (new PreparesQueryStatement)->__invoke(1);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Drewlabs\Query\Tests;
+
 use Drewlabs\Query\Builder as QueryBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -64,7 +66,7 @@ class BuilderTest extends TestCase
         $query = $builder->getQuery();
         $this->assertTrue(array_key_exists('exists', $query));
         $this->assertEquals('comments', $query['exists'][0][0]);
-        $this->assertInstanceOf(Closure::class, $query['exists'][0][1]);
+        $this->assertInstanceOf(\Closure::class, $query['exists'][0][1]);
 
         $rawQuery = $builder->getRawQuery();
         $this->assertEquals(['likes', '>=', 100], $rawQuery['exists'][0]['match']['params']['and'][0]);
