@@ -54,7 +54,7 @@ final class Builder implements FiltersBuilderInterface
         return new static();
     }
 
-    public function and($column, string $operator = null, $value = null)
+    public function and($column, ?string $operator = null, $value = null)
     {
         $column = $column instanceof \Closure ? new SubQuery('and', $column(static::new())->getQuery()) : $column;
         $this->setWhereQuery('and', $column, $operator, $value);
@@ -170,14 +170,14 @@ final class Builder implements FiltersBuilderInterface
         return $and ? $this->and($column, 'like', $value) : $this->or($column, 'like', $value);
     }
 
-    public function date($column, string $operator = null, $value = null)
+    public function date($column, ?string $operator = null, $value = null)
     {
         $this->setWhereQuery('date', $column, $operator, $value);
 
         return $this;
     }
 
-    public function orDate($column, string $operator = null, $value = null)
+    public function orDate($column, ?string $operator = null, $value = null)
     {
         $this->setWhereQuery('orDate', $column, $operator, $value);
 
@@ -244,7 +244,7 @@ final class Builder implements FiltersBuilderInterface
      *
      * @return static
      */
-    public function count($column = '*', string $relation = null)
+    public function count($column = '*', ?string $relation = null)
     {
         $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
 
@@ -258,7 +258,7 @@ final class Builder implements FiltersBuilderInterface
      * @param string|null $relation 
      * @return static
      */
-    public function min(string $column, string $relation = null)
+    public function min(string $column, ?string $relation = null)
     {
         $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
 
@@ -272,7 +272,7 @@ final class Builder implements FiltersBuilderInterface
      * @param string|null $relation 
      * @return static
      */
-    public function max(string $column, string $relation = null)
+    public function max(string $column, ?string $relation = null)
     {
         $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
 
@@ -286,7 +286,7 @@ final class Builder implements FiltersBuilderInterface
      * @param string|null $relation 
      * @return static
      */
-    public function sum(string $column, string $relation = null)
+    public function sum(string $column, ?string $relation = null)
     {
         $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
 
@@ -300,7 +300,7 @@ final class Builder implements FiltersBuilderInterface
      * @param string|null $relation 
      * @return static
      */
-    public function avg(string $column, string $relation = null)
+    public function avg(string $column, ?string $relation = null)
     {
         $this->appendQuery(__FUNCTION__, null !== $relation ? [$column, $relation] : [$column]);
 
@@ -417,7 +417,7 @@ final class Builder implements FiltersBuilderInterface
      *
      * @return array|mixed
      */
-    public function getRawQuery(string $method = null)
+    public function getRawQuery(?string $method = null)
     {
         return $method ? ($this->__QUERY__[$method] ?? null) : ($this->__QUERY__ ?? []);
     }
@@ -427,7 +427,7 @@ final class Builder implements FiltersBuilderInterface
      *
      * @return array|mixed
      */
-    public function getQuery(string $method = null)
+    public function getQuery(?string $method = null)
     {
         return $method ? (isset($this->__QUERY__[$method]) ? PreparesFiltersArray::doPrepare($this->__QUERY__[$method], $method) : null) : PreparesFiltersArray::new($this->__QUERY__)->call() ?? [];
     }

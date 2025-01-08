@@ -42,7 +42,7 @@ class Queryable implements AbstractQueryable
      *
      * @param array $columns
      */
-    public function __construct(string $id = 'id', $columns = [], array $relations = [], string $table = null)
+    public function __construct(string $id = 'id', $columns = [], array $relations = [], ?string $table = null)
     {
         $this->id = $id ?? 'id';
         $this->columns = $columns ?? [];

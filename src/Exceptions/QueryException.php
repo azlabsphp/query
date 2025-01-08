@@ -28,7 +28,7 @@ class QueryException extends \RuntimeException
      *
      * @return void
      */
-    public function __construct($message = null, $code = 500, \Throwable $trace = null)
+    public function __construct($message = null, $code = 500, ?\Throwable $trace = null)
     {
         $message = $message ? sprintf('Error %d: %s', $code, $message) : sprintf('Unknown Error %d', $code);
         parent::__construct($message, 500, $trace);

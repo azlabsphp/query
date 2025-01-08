@@ -94,7 +94,7 @@ class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
     }
 
     // #region Miscellanous
-    private function proxy($object, $method, $args = [], \Closure $default = null)
+    private function proxy($object, $method, $args = [], ?\Closure $default = null)
     {
         try {
             // Call the method on the provided object
