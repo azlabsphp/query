@@ -86,4 +86,28 @@ class BuilderTest extends TestCase
         $builder->distinct('name');
         $this->assertEquals(['name'], $builder->getQuery('distinct'));
     }
+
+
+    public function test_when_callback_is_called_if_first_parameter_evalutes_to_true()
+    {
+
+        $builder = QueryBuilder::new()->when(true, function ($q) {
+            return $q->notIn('id', [90, 120, 167]);
+        })
+            ->and('title', 'Lorem Ipsum');
+
+
+        $this->assertEquals(['id', [90, 120, 167]], $builder->getQuery('notIn')[0]);
+    }
+
+    public function test_when_callback_is_not_called_if_parameter_evaluates_to_false()
+    {
+        $builder = QueryBuilder::new()->when(false, function ($q) {
+            return $q->notIn('id', [90, 120, 167]);
+        })
+            ->and('title', 'Lorem Ipsum');
+
+
+        $this->assertEquals([], $builder->getQuery('notIn', []));
+    }
 }

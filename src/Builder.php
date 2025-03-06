@@ -13,13 +13,17 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use Closure;
 use Drewlabs\Query\Contracts\FiltersBuilderInterface;
 use Drewlabs\Query\Utils\SubQuery;
+use Drewlabs\Query\Contracts\Conditionable;
 
 /**
  * Provides implementation for building filters query using fluent interface.
  *
  * @author Sidoine Azandrew <contact@liksoft.tg>
+ * 
+ * @mixin Conditionable
  */
 final class Builder implements FiltersBuilderInterface
 {
@@ -397,6 +401,22 @@ final class Builder implements FiltersBuilderInterface
         return $this;
     }
 
+    public function when($value, ?callable $query = null, ?callable $default = null)
+    {
+        $callback = function ($builder) {
+            return $builder;
+        };
+
+        if ($query) {
+            $callback = function ($q) use ($query, $value, $default) {
+                $value = $value instanceof \Closure ? $value($this) : $value;
+                return $value ? $query($q, $value) : ($default ? $default($q, $value) : $q);
+            };
+        }
+
+        return $callback($this) ?? $this;
+    }
+
     /**
      * Set the list of columns to exclude from the rest query result.
      *
@@ -423,13 +443,17 @@ final class Builder implements FiltersBuilderInterface
     }
 
     /**
-     * Get compiled query.
+     * get compiled query.
+     * 
+     * @template TReturnType
      *
-     * @return array|mixed
+     * @param TReturnType|null $default
+     * 
+     * @return array|TReturnType|null
      */
-    public function getQuery(?string $method = null)
+    public function getQuery(?string $method = null, $default = null)
     {
-        return $method ? (isset($this->__QUERY__[$method]) ? PreparesFiltersArray::doPrepare($this->__QUERY__[$method], $method) : null) : PreparesFiltersArray::new($this->__QUERY__)->call() ?? [];
+        return $method ? (isset($this->__QUERY__[$method]) ? PreparesFiltersArray::doPrepare($this->__QUERY__[$method], $method) : $default ?? null) : PreparesFiltersArray::new($this->__QUERY__)->call() ?? [];
     }
 
     /**
