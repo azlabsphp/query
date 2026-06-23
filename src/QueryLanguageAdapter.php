@@ -16,6 +16,8 @@ namespace Drewlabs\Query;
 use Drewlabs\Query\Contracts\QueryLanguageInterface;
 
 /**
+ * @template TResult
+ * 
  * @method TResult                                                   create(array $attributes, \Closure $callback = null)
  * @method TResult                                                   create(array $attributes, $params, bool $batch, \Closure $callback = null)
  * @method TResult                                                   create(array $attributes, $params = [], \Closure $callback)
@@ -72,11 +74,21 @@ final class QueryLanguageAdapter implements QueryLanguageInterface
         return $this->language->select(...$args);
     }
 
+    /**
+     * @param mixed ...$args 
+     * @return mixed 
+     */
     public function update(...$args)
     {
         return $this->language->update(...$args);
     }
 
+    /**
+     * @param array $query 
+     * @param string $aggregation 
+     * @param mixed ...$args 
+     * @return int|mixed 
+     */
     public function aggregate(array $query = [], string $aggregation = AggregationMethods::COUNT, ...$args)
     {
         // TODO: Provide implementation

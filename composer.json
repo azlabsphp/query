@@ -30,8 +30,8 @@
     "require": {
         "php": "^7.2|^8.0",
         "drewlabs/collections": "^0.3",
-        "drewlabs/contracts": "^0.3",
-        "drewlabs/core-helpers": "^0.3",
+        "drewlabs/contracts": "^0.3|^0.4",
+        "drewlabs/core-helpers": "^0.3|^0.4",
         "drewlabs/query-contracts": "^0.3"
     },
     "prefer-stable": true,

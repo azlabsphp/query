@@ -15,11 +15,19 @@ namespace Drewlabs\Query\Tests;
 
 trait ViewModel
 {
+    /**
+     * @param mixed $key 
+     * @return mixed 
+     */
     public function get($key)
     {
         return $this->inputs[$key] ?? null;
     }
 
+    /**
+     * @param mixed $key 
+     * @return bool 
+     */
     public function has($key)
     {
         return isset($this->inputs[$key]);
