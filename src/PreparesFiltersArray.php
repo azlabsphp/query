@@ -45,7 +45,7 @@ class PreparesFiltersArray
      * Prepares a array of filters by mapping filter methods from input source
      * and validating filters parameters.
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return array
      */
@@ -64,7 +64,7 @@ class PreparesFiltersArray
      *
      * **Note** It's an internal API implementation, do not use directly as the API might change
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return void
      */

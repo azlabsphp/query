@@ -8,4 +8,3 @@ Changelog export-ignore
 .gitignore export-ignore
 phpunit.xml export-ignore
 .php-cs-fixer.cache export-ignore
-

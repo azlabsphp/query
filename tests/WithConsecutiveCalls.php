@@ -16,6 +16,12 @@ namespace Drewlabs\Query\Tests;
 use PHPUnit\Framework\Constraint\Callback;
 use PHPUnit\Framework\Constraint\Constraint;
 
+
+/**
+ * @method void assertSameSize(mixed ...$args)
+ * @method void assertThat(mixed ...$args)
+ * @method void assertEquals(mixed ...$args)
+ */
 trait WithConsecutiveCalls
 {
     /**

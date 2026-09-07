@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use BadMethodCallException;
+use Closure;
 use Drewlabs\Collections\Collection;
 use Drewlabs\Query\Contracts\EnumerableResultInterface;
+use Error;
 
 class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
 {
@@ -34,6 +37,12 @@ class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
         $this->setCollection($items);
     }
 
+    /**
+     * @param mixed $name 
+     * @param mixed $arguments 
+     * @return mixed 
+     * @throws BadMethodCallException 
+     */
     public function __call($name, $arguments)
     {
         if (!\is_object($values = $this->getCollection())) {
@@ -94,6 +103,15 @@ class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
     }
 
     // #region Miscellanous
+    /**
+     * @param mixed $object 
+     * @param mixed $method 
+     * @param array $args 
+     * @param null|Closure $default 
+     * @return mixed 
+     * @throws Error 
+     * @throws BadMethodCallException 
+     */
     private function proxy($object, $method, $args = [], ?\Closure $default = null)
     {
         try {
