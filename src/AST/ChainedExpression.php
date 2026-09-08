@@ -15,5 +15,19 @@ namespace Drewlabs\Query\AST;
 
 final class ChainedExpression
 {
-    public function __construct(private array $expressions) {}
+
+    /** @var array */
+    private $expressions;
+
+    public function __construct(array $expressions)
+    {
+        $this->expressions = $expressions;
+    }
+
+    public function toArray()
+    {
+        return array_map(function ($expression) {
+            return $expression->toArray();
+        }, $this->expressions);
+    }
 }

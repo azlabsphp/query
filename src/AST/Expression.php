@@ -16,5 +16,31 @@ namespace Drewlabs\Query\AST;
 
 final class Expression
 {
-    public function __construct(private $name, private $op, private $value) {}
+    /** @var string */
+    private $name;
+
+    /** @var array */
+    private $op;
+
+    /** @var string */
+    private $value;
+
+    /**
+     * 
+     * @param string $name 
+     * @param string $op 
+     * @param mixed $value 
+     */
+    public function __construct(string $name, string $op, $value)
+    {
+        $this->name = $name;
+        $this->op = $op;
+        $this->value = $value;
+    }
+
+
+    public function toArray()
+    {
+        return [$this->name, $this->op, $this->value];
+    }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
@@ -23,42 +24,38 @@ final class PreparesBaseQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
-        // Case the query parameters is empty, return the parameters as it's
         if (empty($params)) {
             return [];
         }
 
         if (\is_array($params)) {
 
-            $isKvPair = array_keys($params) !== range(0, \count($params) - 1);
-            if (!$isKvPair && (array_filter($params, 'is_array') === $params)) {
-                return array_map(static function ($q) {
+            $isKv = Arr::isassoc($params);
+            
+            if (!$isKv) {
+                return !(array_filter($params, 'is_array') === $params) ? $params : array_map(static function ($q) {
                     return (new static())($q);
                 }, $params);
             }
 
-            // Here we are executing a subquery from exists keyword
-            if ($isKvPair && isset($params['match'])) {
+            if (isset($params['match'])) {
                 return MatchSubqueryFactory::new()->create($params['match']);
             }
 
-
-            // Handle basic subqueries
-            if ($isKvPair && isset($params['method']) && isset($params['params'])) {
+            if (isset($params['method']) && isset($params['params'])) {
                 return function (FiltersInterface $instance, $builder) use ($params) {
+
+                    // TODO: Check if params is an array list and build the statement based on that
                     return QueryStatementsReducer::new([new QueryStatement($params['method'], $params['params'])])->call($instance, $builder);
                 };
             }
 
-            // Handles complex subqueries from client sdk
-            if ($isKvPair) {
-                return function (FiltersInterface $instance, $builder) use ($params) {
-                    return QueryStatementsReducer::new(array_reduce(array_keys($params), function ($carry, $key) use ($params) {
-                        $carry[] = new QueryStatement($key, $params[$key]);
-                        return $carry;
-                    }, []))->call($instance, $builder);
-                };
-            }
+            return function (FiltersInterface $instance, $builder) use ($params) {
+                return QueryStatementsReducer::new(array_reduce(array_keys($params), function ($carry, $method) use ($params) {
+                    array_push($carry, new QueryStatement($method, $params[$method]));
+                    return $carry;
+                }, []))->call($instance, $builder);
+            };
         }
 
         return $params;

@@ -44,15 +44,16 @@ class ConditionQuery implements CompilesQueryParameter
      */
     private function list(array $params)
     {
-        $fails = array_filter($params, static function ($item) {
+        $output = array_filter($params, static function ($item) {
             return null === $item || !isset($item);
         }) === $params;
-        if ($fails) {
-            throw new \InvalidArgumentException('Provided query parameters are not defined');
+
+        if ($output) {
+            throw new \InvalidArgumentException('provided query parameters are not defined');
         }
-        // Insure that where not working with associative arrays
+
         $params = array_values($params);
-        // If the first value of the array is an array, parse it else return it
+
         $params[0] = \is_array($params[0]) && (isset($params[0]['model']) && $params[0]['column']) ? (new Attribute($params[0]))->__toString() : $params[0];
 
         return $params;

@@ -13,14 +13,14 @@ class PreparesMatchQueryTest extends TestCase
     public function test_prepares_match_query_on_dictionnary()
     {
         $result = (new PreparesQueryStatement)->__invoke(['method' => 'where', 'params' => ['likes', '4']])[0];
-        $this->assertEquals('where', $result->method());
+        $this->assertEquals('and', $result->method());
         $this->assertEquals(['likes', 4], $result->args());
     }
 
     public function test_prepares_match_query_on_vector()
     {
         $result = (new PreparesQueryStatement)->__invoke(['where', 'likes', '4'])[0];
-        $this->assertEquals('where', $result->method());
+        $this->assertEquals('and', $result->method());
         $this->assertEquals(['likes', 4], $result->args());
     }
 
@@ -28,7 +28,7 @@ class PreparesMatchQueryTest extends TestCase
     {
         $result = (new PreparesQueryStatement)->__invoke('where(name, like, %computer%)')[0];
         $this->assertInstanceOf(QueryStatement::class, $result);
-        $this->assertEquals('where', $result->method());
+        $this->assertEquals('and', $result->method());
         $this->assertEquals(['name', 'like', '%computer%'], $result->args());
     }
 

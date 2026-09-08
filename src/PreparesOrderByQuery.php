@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use BadMethodCallException;
+use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
 /**
@@ -25,31 +27,24 @@ final class PreparesOrderByQuery implements PreparesQuery
         if (\is_string($params)) {
             return ['by' => $params, 'order' => 'desc'];
         }
-        if (!(array_keys($params) !== range(0, \count($params) - 1)) && !static::isKvPairList($params)) {
+
+        if (!is_array($params) || (is_array($params) && empty($params))) {
+            throw new BadMethodCallException('sort query expect the column name as string or a dictionnary of column and order');
+        }
+
+        if (!Arr::isassoc($params) && !Arr::isassoclist($params)) {
             return array_map(static function ($value) {
                 return (new static())($value);
             }, $params);
         }
+
         if (!(isset($params['by']) || isset($params['column'])) && !isset($params['order'])) {
-            throw new \InvalidArgumentException('orderBy query requires column and order keys');
+            throw new \InvalidArgumentException('sort query expects a column and order properties');
         }
-        $by = $params['column'] ?? ($params['by'] ?? 'updated_at');
+
+        $by = $params['column'] ?? $params['by'];
         $order = $params['order'] ?? 'desc';
-
+        
         return ['by' => $by, 'order' => (is_numeric($order) && $order < 0) || (strtolower((string)$order) === 'desc') ? 'desc' : 'asc'];
-    }
-
-    /**
-     * Check if list is an associative list of list.
-     *
-     * @return bool
-     */
-    private static function isKvPairList(array $items)
-    {
-        if (empty($items)) {
-            return false;
-        }
-
-        return 0 !== \count(array_filter(array_keys($items), 'is_string')) && array_filter($items, 'is_array') === $items;
     }
 }

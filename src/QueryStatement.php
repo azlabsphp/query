@@ -34,7 +34,7 @@ class QueryStatement
      */
     public function __construct(string $method, array $args)
     {
-        $this->method = $method;
+        $this->method = Filters::get($method);
         $this->args = $args;
     }
 
@@ -47,21 +47,17 @@ class QueryStatement
      */
     public static function fromString(string $statement)
     {
-        // Case the parameters is not an array type, we parse the string in the format method(p1, p2, p3, ...)
         if (empty($method = static::strBefore('(', $statement))) {
             throw new MalformedQueryExpression($statement);
         }
 
         $arguments = static::strBefore(')', substr($statement, \strlen("$method(")));
-        // Check if the query parameters is empty
         if (null === $arguments) {
             throw new MalformedQueryExpression($statement);
         }
 
-        // Parse the query arguments
         $arguments = trim($arguments);
 
-        // Explode arguments by comma sepatator
         $args = array_map(static function ($p) {
             return trim($p);
         }, explode(',', $arguments));
@@ -87,6 +83,12 @@ class QueryStatement
     public function args()
     {
         return $this->args ?? [];
+    }
+
+
+    public function build()
+    {
+        return PreparesFiltersArray::doPrepare($this->args ?? [], $method = $this->method);
     }
 
     /**

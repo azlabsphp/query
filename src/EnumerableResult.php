@@ -102,7 +102,6 @@ class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
         return $this->values;
     }
 
-    // #region Miscellanous
     /**
      * @param mixed $object 
      * @param mixed $method 
@@ -115,7 +114,6 @@ class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
     private function proxy($object, $method, $args = [], ?\Closure $default = null)
     {
         try {
-            // Call the method on the provided object
             return $object->{$method}(...$args);
         } catch (\Error|\BadMethodCallException $e) {
             // Call the default method if the specified method does not exits
@@ -132,5 +130,4 @@ class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
             throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', static::class, $method));
         }
     }
-    // #region Miscellanous
 }

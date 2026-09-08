@@ -46,21 +46,17 @@ class QueryStatementsReducer
      * Reduce query statements on the filters builder instance
      * 
      * @param FiltersInterface $instance 
-     * @param mixed $builder 
+     * @param mixed $builder
+     * 
      * @return FiltersInterface 
      */
     public function call(FiltersInterface $instance, $builder)
     {
-        // Compiles subquery into dictionnary case the subquery is a string or a list of values
         return array_reduce($this->statements, function ($carry, $statement) use ($builder) {
-            // Prepare the query filters into the output variable to ensure method matches supported method
-            $result = PreparesFiltersArray::doPrepare($statement->args(), $method = Filters::get($statement->method()));
-            // Return the returned value of the function invokation on the query builder
-            $builder = $carry->invoke($method, $builder, $result);
 
-            // Return the filter builder instance for the iteration
+            $builder = $carry->invoke($statement->method(), $builder, $statement->build());
+
             return $carry;
         }, $instance);
     }
-
 }

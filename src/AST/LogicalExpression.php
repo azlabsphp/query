@@ -15,5 +15,23 @@ namespace Drewlabs\Query\AST;
 
 final class LogicalExpression
 {
-    public function __construct(private $operator, private array $expressions) {}
+    /** @var string */
+    private $method;
+
+    /** @var array */
+    private $expressions;
+
+    public function __construct(string $method, array $expressions)
+    {
+        $this->method = $method;
+        $this->expressions = $expressions;
+    }
+
+
+    public function toArray()
+    {
+        return ['method' => $this->method, 'params' => count($this->expressions) === 1 ? $this->expressions[0]->toArray() : array_map(function ($expression) {
+            return $expression->toArray();
+        }, $this->expressions)];
+    }
 }

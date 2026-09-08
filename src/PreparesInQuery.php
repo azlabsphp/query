@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
 /**
@@ -22,22 +23,24 @@ final class PreparesInQuery implements PreparesQuery
 {
     public function __invoke($params)
     {
-        if (!($isKvPair = array_keys($params) !== range(0, \count($params) - 1)) && ((array_filter($params, 'is_array') === $params) && !$isKvPair)) {
-            // The provided query parameters is an array
+        $isKv = Arr::isassoc($params);
+        
+        if (!$isKv && (array_filter($params, 'is_array') === $params)) {
             return array_map(static function ($q) {
                 return (new static())($q);
             }, $params);
         }
-        if (!$isKvPair) {
+
+        if (!$isKv) {
             $count = \count($params);
             if (2 !== $count) {
-                throw new \InvalidArgumentException('whereNotIn | whereIn query require 2 items first one being the column name and second being the matching array, when not using associative array like ["column" => "col", "match" => $items]');
+                throw new \InvalidArgumentException('`in` | `notin` query require 2 items first one being the column name and second being the matching array, when not using associative array like ["column" => "col", "match" => $items]');
             }
-
             return [$params[0], $params[1]];
         }
+
         if (!isset($params['column']) && !isset($params['match'])) {
-            throw new \InvalidArgumentException('Outer whereIn | whereNotIn query requires column key and match key');
+            throw new \InvalidArgumentException('`in` | `notin` query requires column key and match key');
         }
 
         return [$params['column'], $params['match']];

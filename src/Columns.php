@@ -43,7 +43,7 @@ final class Columns
     }
 
     /**
-     * Convert user provided selectable columns in a tuple of $columns and $relations to load.
+     * convert user provided selectable columns in a tuple of $columns and $relations to load.
      *
      * @return array<string[]>
      */
@@ -51,30 +51,24 @@ final class Columns
     {
         $values = [];
 
-        // we convert the list of columns into 1-dimensional tableau
         $this->flatten($this->value, $values);
 
-        // Get the list of top level declared relations
-        $mapResult = array_map(static function ($item) {
+        $map = array_map(static function ($item) {
             return str_contains($item, '.') ? Str::before('.', $item) : $item;
         }, $relations ?? []);
-        // Creates the list of relation fields to be added to the model list of columns
-        $filterResult = array_filter($values, static function ($item) use ($mapResult, $relations) {
+
+        $includes = array_filter($values, static function ($item) use ($map, $relations) {
             if (str_contains($item, '.')) {
-                return \in_array(Str::before('.', $item), $mapResult, true) || \in_array($item, $relations, true);
+                return \in_array(Str::before('.', $item), $map, true) || \in_array($item, $relations, true);
             }
 
-            return \in_array($item, $mapResult, true);
+            return \in_array($item, $map, true);
         });
-        // Create the actual list of model column to be selected from the database
+
         $columns = array_intersect($values, $declared);
-        if (\in_array('*', $values, true)) {
-            $columns = [];
-        } else {
-            $columns = empty($value = array_diff($columns, $filterResult)) ? [null] : $value;
-        }
-        // Return the tuple of column and relations
-        return [array_values($columns), array_values($filterResult)];
+        $columns = \in_array('*', $values, true) ? [] : (empty($value = array_diff($columns, $includes)) ? [null] : $value);
+
+        return [array_values($columns), array_values($includes)];
     }
 
     /**

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
-use Closure;
 use Drewlabs\Query\Contracts\FiltersBuilderInterface;
 use Drewlabs\Query\Utils\SubQuery;
 use Drewlabs\Query\Contracts\Conditionable;
@@ -60,7 +59,7 @@ final class Builder implements FiltersBuilderInterface
 
     public function and($column, ?string $operator = null, $value = null)
     {
-        $column = $column instanceof \Closure ? new SubQuery('and', $column(static::new())->getQuery()) : $column;
+        $column = $column instanceof \Closure ? new SubQuery('and', $column) : $column;
         $this->setWhereQuery('and', $column, $operator, $value);
 
         return $this;
@@ -77,7 +76,7 @@ final class Builder implements FiltersBuilderInterface
      */
     public function or($column, $operator = null, $value = null)
     {
-        $column = $column instanceof \Closure ? new SubQuery('and', $column(static::new())->getQuery()) : $column;
+        $column = $column instanceof \Closure ? new SubQuery('and', $column) : $column;
         $this->setWhereQuery('or', $column, $operator, $value);
 
         return $this;
@@ -503,8 +502,7 @@ final class Builder implements FiltersBuilderInterface
      */
     private function setExistQuery(string $as, $query, $method = 'exists')
     {
-        $query = $query instanceof \Closure ? new SubQuery('and', $query(static::new())->getQuery()) : $query;
-        // Case the query is a subquery object we returns the json representation of the query
+        $query = $query instanceof \Closure ? new SubQuery('and', $query) : $query;
         $query = $query instanceof SubQuery ? ['column' => $as, 'match' => $query->json()] : (null === $query ? $as : [$as, $query]);
 
         $this->appendQuery($method, $query);
@@ -514,16 +512,15 @@ final class Builder implements FiltersBuilderInterface
      * Construct and set the actual where query object.
      *
      * @param mixed $column
-     * @param mixed $operatorOrValue
+     * @param mixed $op
      * @param mixed $value
      *
      * @return void
      */
-    private function setWhereQuery(string $method, $column, $operatorOrValue = null, $value = null)
+    private function setWhereQuery(string $method, $column, $op = null, $value = null)
     {
         $this->__QUERY__ = $this->__QUERY__ ?? [];
-        $query = (!isset($operatorOrValue) && !isset($value)) ? ($column instanceof SubQuery ? $column->json() : $column) : (isset($operatorOrValue) && !isset($value) ? [$column, '=', $operatorOrValue] : [$column, $operatorOrValue, $value]);
-        // Add the % prefix and suffix if query operator is a `like` or `match` query
+        $query = (!isset($op) && !isset($value)) ? ($column instanceof SubQuery ? $column->json() : $column) : (isset($op) && !isset($value) ? [$column, '=', $op] : [$column, $op, $value]);
         if (isset($query[1]) && (('like' === $query[1]) || ('match' === $query[1])) && isset($query[2])) {
             $query[2] = str_contains((string) $query[2], '%') ? $query[2] : '%' . (string) $query[2] . '%';
         }

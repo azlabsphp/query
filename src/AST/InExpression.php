@@ -15,6 +15,24 @@ namespace Drewlabs\Query\AST;
 
 final class InExpression
 {
-    public function __construct(private string $name, private array $values) {}
+    /** @var string */
+    private $name;
 
+    /** @var array */
+    private $values;
+
+    /** @var string */
+    private $method;
+
+    public function __construct(string $name, array $values, string $method = 'in')
+    {
+        $this->name = $name;
+        $this->values = $values;
+        $this->method = $method;
+    }
+
+    public function toArray()
+    {
+        return ['method' => $this->method, 'params' => [$this->name, $this->values]];
+    }
 }

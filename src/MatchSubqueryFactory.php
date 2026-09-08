@@ -40,7 +40,6 @@ class MatchSubqueryFactory
     public function create($arguments)
     {
         return static function (FiltersInterface $instance, $builder) use ($arguments) {
-            // Compiles subquery into dictionnary case the subquery is a string or a list of values
             $statements = (new PreparesQueryStatement())->__invoke($arguments);
             return QueryStatementsReducer::new($statements)->call($instance, $builder);
         };

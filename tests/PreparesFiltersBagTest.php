@@ -20,7 +20,7 @@ class PreparesFiltersBagTest extends TestCase
 {
     public function test_build_sub_or_query_from_query_parameters()
     {
-        $filters = PreparesFiltersBag::from_Query_Parameters(new Person(), new class() {
+        $filters = PreparesFiltersBag::fromQueryParams(new Person(), new class() {
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
@@ -31,12 +31,12 @@ class PreparesFiltersBagTest extends TestCase
 
         $this->assertTrue('addresses' === $filters['orExists'][0]['column']);
         $this->assertTrue(is_array($filters['orExists'][0]['match']));
-        $this->assertSame($filters['or'][0], ['lastname', 'like', '%Azandrew%']);
+        $this->assertSame($filters['or'][0], ['lastname', '=', 'Azandrew']);
     }
 
     public function test_build_sub_and_query_from_query_parameters()
     {
-        $filters = PreparesFiltersBag::from_Query_Parameters(new Person(), new class() {
+        $filters = PreparesFiltersBag::fromQueryParams(new Person(), new class() {
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
@@ -46,12 +46,12 @@ class PreparesFiltersBagTest extends TestCase
         });
         $this->assertTrue('addresses' === $filters['exists'][0]['column']);
         $this->assertTrue(is_array($filters['exists'][0]['match']));
-        $this->assertSame($filters['or'][0], ['lastname', 'like', '%Azandrew%']);
+        $this->assertSame($filters['or'][0], ['lastname', '=', 'Azandrew']);
     }
 
     public function test_build_from_query_input()
     {
-        $result = PreparesFiltersBag::from_Query_Body(new class() {
+        $result = PreparesFiltersBag::fromBody(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],
@@ -98,7 +98,7 @@ class PreparesFiltersBagTest extends TestCase
 
     public function test_filter_query_parameters_returns_and_clauses_if_value_contains_and_operator()
     {
-        $result = PreparesFiltersBag::from_Query_Parameters(new Person(), $this->createParametersBag([
+        $result = PreparesFiltersBag::fromQueryParams(new Person(), $this->createParametersBag([
             'email' => '&&:==:azandrewdevelopper@gmail.com',
             'lastname' => 'and:=like:AZOMEDOH',
             'age' => '&&:>=:2022-10-10|&&:<=:2022-10-10',
@@ -143,7 +143,7 @@ class PreparesFiltersBagTest extends TestCase
 
     public function test_alternate_query_methods()
     {
-        $result = PreparesFiltersBag::from_Query_Body(new class() {
+        $result = PreparesFiltersBag::fromBody(new class() {
             private $inputs = [
                 '_query' => [
                     'where' => ['age', 28],

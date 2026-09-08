@@ -136,8 +136,8 @@ final class Builder
                 $this->consume(',');
             }
         }
-        $this->consume(')',); // Consume closing ')'
-        return new LogicalExpression(strtoupper($operator), $expressions);
+        $this->consume(')',);
+        return new LogicalExpression(strtolower($operator), $expressions);
     }
 
     /**

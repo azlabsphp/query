@@ -50,9 +50,9 @@ class JoinQuery implements CompilesQueryParameter
         if ($filterResult) {
             throw new \InvalidArgumentException('Provided query parameters are not defined');
         }
-        // Insure that where not working with associative arrays
+
         $params = array_values($params);
-        // Case the operator part if missing
+
         if (3 === \count($params)) {
             $params[0] = (\is_string($params[0]) && !class_exists($params[0])) ? $params[0] : (string) (new Attribute(
                 \is_array($params[0]) ? $params[0] : ['model' => $params[0]]

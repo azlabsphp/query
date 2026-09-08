@@ -15,6 +15,31 @@ namespace Drewlabs\Query\AST;
 
 final class ExistsExpression
 {
-    public function __construct(private string $column, private $query) {}
+    /** @var string */
+    private $column;
 
+    /** @var array */
+    private $query;
+
+    /** @var string */
+    private $method;
+
+    public function __construct(string $column, array $query, string $method = 'exists')
+    {
+        $this->column = $column;
+        $this->query = $query;
+        $this->method = $method;
+    }
+
+
+    public function toArray()
+    {
+        if (empty($this->query)) {
+            return ['method' => $this->method, 'column' => $this->column];
+        }
+
+        return ['method' => $this->method, 'column' => $this->column, 'match' => count( $this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) {
+            return $expression->toArray();
+        }, $this->query)];
+    }
 }

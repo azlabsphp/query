@@ -35,9 +35,8 @@ class PreparesQueryStatement implements PreparesQuery
             return [(new QueryStatement($method, $args))];
         }
 
-        // Case the params is not a string we throw a type error
         if (!\is_string($params)) {
-            throw new \TypeError('Expected method parameter to be an array or string, we got ' . (null !== $params && \is_object($params) ? $params::class : \gettype($params)));
+            throw new \TypeError('expected method parameter to be an array or string, we got ' . (null !== $params && \is_object($params) ? $params::class : \gettype($params)));
         }
 
         return array_reduce(explode('->', $params), function ($carry, $current) {

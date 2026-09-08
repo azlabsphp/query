@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\Utils;
 
+use Drewlabs\Query\Builder;
+use Drewlabs\Query\Contracts\FiltersBuilderInterface;
+
 class SubQuery
 {
     /**
@@ -23,16 +26,21 @@ class SubQuery
     /**
      * @var array|mixed
      */
-    private $params;
+    private $builder;
+
+
+    /** @var \Closure(): array */
+    private $fn;
 
     /**
-     * Creates class instance.
+     * creates class instance.
+     * 
+     * @param \Closure(FiltersBuilderInterface $b):FiltersBuilderInterface
      */
-    public function __construct(string $method, array $params)
+    public function __construct(string $method, \Closure $fn)
     {
-        // code...
         $this->method = $method;
-        $this->params = $params;
+        $this->fn = $fn;
     }
 
     /**
@@ -57,8 +65,7 @@ class SubQuery
      */
     public function setParameters($params)
     {
-        // code...
-        $this->params = $params;
+        $this->builder = $params;
 
         return $this;
     }
@@ -70,10 +77,10 @@ class SubQuery
      */
     public function json()
     {
-        // code...
-        return [
-            'method' => $this->method,
-            'params' => $this->params,
-        ];
+        if (null === $this->builder) {
+            $this->builder = call_user_func($this->fn, Builder::new());
+        }
+
+        return ['method' => $this->method, 'params' => $this->builder->getQuery() ];
     }
 }

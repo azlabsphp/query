@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Query\Contracts\PreparesQuery;
 
@@ -27,41 +28,39 @@ class PreparesNullQuery implements PreparesQuery
             if (\is_string($value)) {
                 return $value;
             }
-            if (!($isKvPair = array_keys($value) !== range(0, \count($value) - 1))) {
-                return array_reduce(
-                    $value,
-                    static function ($carry, $result) use (&$closure) {
-                        if (\is_array($result) && array_keys($result) !== range(0, \count($result) - 1)) {
-                            $result = $closure($result);
-                        }
 
-                        return \in_array($result, $carry, true) ? $carry : array_merge($carry, \is_array($result) ? $result : [$result]);
-                    },
-                    []
-                );
+            $isKv = Arr::isassoc($value);
+
+            if (!$isKv) {
+                return array_reduce($value, static function ($carry, $result) use (&$closure) {
+                    if (\is_array($result) && array_keys($result) !== range(0, \count($result) - 1)) {
+                        $result = $closure($result);
+                    }
+                    return \in_array($result, $carry, true) ? $carry : array_merge($carry, \is_array($result) ? $result : [$result]);
+                }, []);
             }
-            if ($isKvPair && !isset($value['column'])) {
-                throw new \InvalidArgumentException('sort query requires column key');
+
+            if ($isKv && !isset($value['column'])) {
+                throw new \InvalidArgumentException('null query requires column key');
             }
 
             return $value['column'] ?? $value[0] ?? null;
         });
 
-        // Prepare query filters parameter
         $prepare = static function ($value) use ($closure) {
             return \is_string($value) ? $value : $closure($value);
         };
 
-        // Cleanup query filters removing null result
         $cleanup = static function ($array) {
             if (\is_array($array)) {
-                return array_filter($array, static function ($item) {
+                return array_values(array_filter($array, static function ($item) {
                     return null !== $item;
-                });
+                }));
             }
 
             return $array;
         };
+
         if (\is_array($params)) {
             if (array_filter($params, 'is_array') === $params) {
                 return $cleanup(array_reduce($params, static function ($carry, $current) use ($prepare) {

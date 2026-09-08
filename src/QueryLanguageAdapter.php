@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Query;
 
 use Drewlabs\Query\Contracts\QueryLanguageInterface;
+use InvalidArgumentException;
 
 /**
  * @template TResult
@@ -84,6 +85,26 @@ final class QueryLanguageAdapter implements QueryLanguageInterface
     }
 
     /**
+     * insert multiple lines into the database
+     * 
+     * @param array $values 
+     * @return void 
+     * @throws InvalidArgumentException 
+     */
+    public function insert(array $values)
+    {
+        if (!(array_filter($values, 'is_array') === $values)) {
+            throw new \InvalidArgumentException('$attributes must be a multi-dimensional tableau');
+        }
+
+        foreach ($values as $value) {
+            $this->language->createMany($value);
+        }
+    }
+
+    /**
+     * @deprecated will be remove in future release
+     * 
      * @param array $query 
      * @param string $aggregation 
      * @param mixed ...$args 
@@ -94,13 +115,15 @@ final class QueryLanguageAdapter implements QueryLanguageInterface
         // TODO: Provide implementation
     }
 
+
+    /**
+     * @deprecated use insert() instead
+     * 
+     * @param array $attributes 
+     * @return bool 
+     */
     public function createMany(array $attributes)
     {
-        if (!(array_filter($attributes, 'is_array') === $attributes)) {
-            throw new \InvalidArgumentException('$attributes must be a multi-dimensional tableau');
-        }
-        foreach ($attributes as $value) {
-            $this->language->create($value);
-        }
+        return $this->insert($attributes);
     }
 }
