@@ -111,16 +111,16 @@
         },
         {
             "name": "drewlabs/contracts",
-            "version": "v0.3.1",
+            "version": "v0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/drewlabs-contracts.git",
-                "reference": "d91b888e41fa050d8530b77d851f50139d996fef"
+                "reference": "ef8c8768e9fa85e329adb536c8a71f73eb326a4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/drewlabs-contracts/zipball/d91b888e41fa050d8530b77d851f50139d996fef",
-                "reference": "d91b888e41fa050d8530b77d851f50139d996fef",
+                "url": "https://api.github.com/repos/azlabsphp/drewlabs-contracts/zipball/ef8c8768e9fa85e329adb536c8a71f73eb326a4c",
+                "reference": "ef8c8768e9fa85e329adb536c8a71f73eb326a4c",
                 "shasum": ""
             },
             "require": {
@@ -147,22 +147,22 @@
             "description": "Repository for libraries interfaces",
             "support": {
                 "issues": "https://github.com/azlabsphp/drewlabs-contracts/issues",
-                "source": "https://github.com/azlabsphp/drewlabs-contracts/tree/v0.3.1"
+                "source": "https://github.com/azlabsphp/drewlabs-contracts/tree/v0.4.3"
             },
-            "time": "2025-02-18T12:22:49+00:00"
+            "time": "2026-07-29T11:23:50+00:00"
         },
         {
             "name": "drewlabs/core-helpers",
-            "version": "v0.4.1",
+            "version": "v0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/drewlabs-core-helpers.git",
-                "reference": "6dcd837234d1ee56cff4cb09ad1c71a8d521a90e"
+                "reference": "f27e102754b176cd5182b7331b3482e80652a450"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/drewlabs-core-helpers/zipball/6dcd837234d1ee56cff4cb09ad1c71a8d521a90e",
-                "reference": "6dcd837234d1ee56cff4cb09ad1c71a8d521a90e",
+                "url": "https://api.github.com/repos/azlabsphp/drewlabs-core-helpers/zipball/f27e102754b176cd5182b7331b3482e80652a450",
+                "reference": "f27e102754b176cd5182b7331b3482e80652a450",
                 "shasum": ""
             },
             "require": {
@@ -201,22 +201,22 @@
             "description": "Set of global function for handling utility task ranging from array, string and datetimes manipulations",
             "support": {
                 "issues": "https://github.com/azlabsphp/drewlabs-core-helpers/issues",
-                "source": "https://github.com/azlabsphp/drewlabs-core-helpers/tree/v0.4.1"
+                "source": "https://github.com/azlabsphp/drewlabs-core-helpers/tree/v0.4.3"
             },
-            "time": "2026-06-23T19:09:09+00:00"
+            "time": "2026-07-24T12:48:48+00:00"
         },
         {
             "name": "drewlabs/overloadable",
-            "version": "v0.3.0",
+            "version": "v0.3.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/azandrew-sidoine/drewlabs-php-overloadable.git",
-                "reference": "1bed2b7bea6cab12d58af17ff36c3d01a08801c6"
+                "url": "https://github.com/azlabsphp/overloadable.git",
+                "reference": "ad97219f45ee7d7a6ad09e73ff4141936d75ec3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azandrew-sidoine/drewlabs-php-overloadable/zipball/1bed2b7bea6cab12d58af17ff36c3d01a08801c6",
-                "reference": "1bed2b7bea6cab12d58af17ff36c3d01a08801c6",
+                "url": "https://api.github.com/repos/azlabsphp/overloadable/zipball/ad97219f45ee7d7a6ad09e73ff4141936d75ec3b",
+                "reference": "ad97219f45ee7d7a6ad09e73ff4141936d75ec3b",
                 "shasum": ""
             },
             "require": {
@@ -224,7 +224,7 @@
                 "symfony/polyfill-php81": "^1.24"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^9.5|^11.0"
             },
             "type": "library",
             "autoload": {
@@ -244,26 +244,29 @@
             ],
             "description": "Provides function overloading to PHP language. It's an experimental feature as it may not be optimized for all use-case",
             "support": {
-                "source": "https://github.com/azandrew-sidoine/drewlabs-php-overloadable/tree/v0.3.0"
+                "source": "https://github.com/azlabsphp/overloadable/tree/v0.3.2"
             },
-            "time": "2024-03-21T18:56:25+00:00"
+            "time": "2026-06-24T14:33:42+00:00"
         },
         {
             "name": "drewlabs/query-contracts",
-            "version": "v0.3.10",
+            "version": "v0.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/query-contracts.git",
-                "reference": "264076850b2d203a5571dfadeb72eea39c083422"
+                "reference": "0b320f39316d6f0c9cbc2d8a225f2d4d03384041"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/query-contracts/zipball/264076850b2d203a5571dfadeb72eea39c083422",
-                "reference": "264076850b2d203a5571dfadeb72eea39c083422",
+                "url": "https://api.github.com/repos/azlabsphp/query-contracts/zipball/0b320f39316d6f0c9cbc2d8a225f2d4d03384041",
+                "reference": "0b320f39316d6f0c9cbc2d8a225f2d4d03384041",
                 "shasum": ""
             },
             "require": {
-                "drewlabs/contracts": "^0.3"
+                "drewlabs/contracts": "^0.3|^0.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.2"
             },
             "type": "library",
             "autoload": {
@@ -287,9 +290,9 @@
             ],
             "support": {
                 "issues": "https://github.com/azlabsphp/query-contracts/issues",
-                "source": "https://github.com/azlabsphp/query-contracts/tree/v0.3.10"
+                "source": "https://github.com/azlabsphp/query-contracts/tree/v0.3.11"
             },
-            "time": "2025-03-06T15:49:33+00:00"
+            "time": "2026-06-26T13:27:40+00:00"
         },
         {
             "name": "psr/container",
@@ -746,20 +749,20 @@
     "packages-dev": [
         {
             "name": "myclabs/deep-copy",
-            "version": "1.13.4",
+            "version": "1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a"
+                "reference": "8680aa248f8e07bc8fb43f56f0f5fc77a0c96aae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/07d290f0c47959fd5eed98c95ee5602db07e0b6a",
-                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/8680aa248f8e07bc8fb43f56f0f5fc77a0c96aae",
+                "reference": "8680aa248f8e07bc8fb43f56f0f5fc77a0c96aae",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0"
+                "php": "^8.0"
             },
             "conflict": {
                 "doctrine/collections": "<1.6.8",
@@ -794,32 +797,31 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.4"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.14.0"
             },
             "funding": [
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/myclabs/deep-copy",
-                    "type": "tidelift"
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
                 }
             ],
-            "time": "2025-08-01T08:46:24+00:00"
+            "time": "2026-08-11T10:17:44+00:00"
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.7.0",
+            "version": "v5.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "dca41cd15c2ac9d055ad70dbfd011130757d1f82"
+                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/dca41cd15c2ac9d055ad70dbfd011130757d1f82",
-                "reference": "dca41cd15c2ac9d055ad70dbfd011130757d1f82",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
+                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
                 "shasum": ""
             },
             "require": {
-                "ext-ctype": "*",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
                 "php": ">=7.4"
@@ -858,9 +860,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.7.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.8.0"
             },
-            "time": "2025-12-06T11:56:16+00:00"
+            "time": "2026-07-04T14:30:18+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1303,24 +1305,24 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.63",
+            "version": "10.5.64",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "33198268dad71e926626b618f3ec3966661e4d90"
+                "reference": "0e8c1d19cea35ad97d4887f363d07c78e30fbf06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/33198268dad71e926626b618f3ec3966661e4d90",
-                "reference": "33198268dad71e926626b618f3ec3966661e4d90",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0e8c1d19cea35ad97d4887f363d07c78e30fbf06",
+                "reference": "0e8c1d19cea35ad97d4887f363d07c78e30fbf06",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-filter": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
                 "ext-mbstring": "*",
-                "ext-xml": "*",
                 "ext-xmlwriter": "*",
                 "myclabs/deep-copy": "^1.13.4",
                 "phar-io/manifest": "^2.0.4",
@@ -1384,31 +1386,15 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.63"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.64"
             },
             "funding": [
                 {
-                    "url": "https://phpunit.de/sponsors.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/sebastianbergmann",
-                    "type": "github"
-                },
-                {
-                    "url": "https://liberapay.com/sebastianbergmann",
-                    "type": "liberapay"
-                },
-                {
-                    "url": "https://thanks.dev/u/gh/sebastianbergmann",
-                    "type": "thanks_dev"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/phpunit/phpunit",
-                    "type": "tidelift"
+                    "url": "https://phpunit.de/sponsoring.html",
+                    "type": "other"
                 }
             ],
-            "time": "2026-01-27T05:48:37+00:00"
+            "time": "2026-07-06T14:50:35+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2180,16 +2166,16 @@
         },
         {
             "name": "sebastian/recursion-context",
-            "version": "5.0.1",
+            "version": "5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "47e34210757a2f37a97dcd207d032e1b01e64c7a"
+                "reference": "5d32fe257a9b39cb63146924d6b4e32a22d4502a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/47e34210757a2f37a97dcd207d032e1b01e64c7a",
-                "reference": "47e34210757a2f37a97dcd207d032e1b01e64c7a",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/5d32fe257a9b39cb63146924d6b4e32a22d4502a",
+                "reference": "5d32fe257a9b39cb63146924d6b4e32a22d4502a",
                 "shasum": ""
             },
             "require": {
@@ -2232,7 +2218,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/recursion-context/issues",
                 "security": "https://github.com/sebastianbergmann/recursion-context/security/policy",
-                "source": "https://github.com/sebastianbergmann/recursion-context/tree/5.0.1"
+                "source": "https://github.com/sebastianbergmann/recursion-context/tree/5.0.2"
             },
             "funding": [
                 {
@@ -2252,7 +2238,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-10T07:50:56+00:00"
+            "time": "2026-08-11T05:27:39+00:00"
         },
         {
             "name": "sebastian/type",
