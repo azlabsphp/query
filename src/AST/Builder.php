@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\AST;
 
-final class Parser
+final class Builder
 {
     /** @var string */
     private $pattern = '/(?:->|\b)(and|or|in|exists)(?=\()|\'[^\']*\'|"[^"]*"|([a-zA-Z0-9_\.]+)|([=><!]+)|([(),\[\]])/';
@@ -185,7 +185,7 @@ final class Parser
         return count($nodes) === 1 ? $nodes[0] : new ChainedExpression($nodes);
     }
 
-    public function parse(string $expression)
+    public function build(string $expression)
     {
         preg_match_all($this->pattern, $expression, $matches);
         $this->tokens = array_values(array_filter($matches[0], fn($v) => trim($v) !== ''));
