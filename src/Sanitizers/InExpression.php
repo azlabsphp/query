@@ -11,15 +11,16 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Drewlabs\Query;
+namespace Drewlabs\Query\Sanitizers;
 
 use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Query\Contracts\PreparesQuery;
+use InvalidArgumentException;
 
 /**
  * @internal
  */
-final class PreparesInQuery implements PreparesQuery
+final class InExpression implements PreparesQuery
 {
     public function __invoke($params)
     {
@@ -34,13 +35,13 @@ final class PreparesInQuery implements PreparesQuery
         if (!$isKv) {
             $count = \count($params);
             if (2 !== $count) {
-                throw new \InvalidArgumentException('`in` | `notin` query require 2 items first one being the column name and second being the matching array, when not using associative array like ["column" => "col", "match" => $items]');
+                throw new InvalidArgumentException('`in` | `notin` query require 2 items first one being the column name and second being the matching array, when not using associative array like ["column" => "col", "match" => $items]');
             }
             return [$params[0], $params[1]];
         }
 
         if (!isset($params['column']) && !isset($params['match'])) {
-            throw new \InvalidArgumentException('`in` | `notin` query requires column key and match key');
+            throw new InvalidArgumentException('`in` | `notin` query requires column key and match key');
         }
 
         return [$params['column'], $params['match']];

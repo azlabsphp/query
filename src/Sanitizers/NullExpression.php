@@ -11,16 +11,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Drewlabs\Query;
+namespace Drewlabs\Query\Sanitizers;
 
 use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Query\Contracts\PreparesQuery;
+use InvalidArgumentException;
 
 /**
  * @internal
  */
-class PreparesNullQuery implements PreparesQuery
+class NullExpression implements PreparesQuery
 {
     public function __invoke($params)
     {
@@ -41,7 +42,7 @@ class PreparesNullQuery implements PreparesQuery
             }
 
             if ($isKv && !isset($value['column'])) {
-                throw new \InvalidArgumentException('null query requires column key');
+                throw new InvalidArgumentException('null query requires column key');
             }
 
             return $value['column'] ?? $value[0] ?? null;

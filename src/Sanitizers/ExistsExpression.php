@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Drewlabs\Query;
+namespace Drewlabs\Query\Sanitizers;
 
 use BadMethodCallException;
 use Drewlabs\Core\Helpers\Arr;
@@ -20,7 +20,7 @@ use Drewlabs\Query\Contracts\PreparesQuery;
 /**
  * @internal
  */
-class PreparesExistQuery implements PreparesQuery
+class ExistsExpression implements PreparesQuery
 {
     public function __invoke($params)
     {
@@ -74,6 +74,6 @@ class PreparesExistQuery implements PreparesQuery
 
         $match = $value['match'] ?? (\count($value) >= 2 ? array_values($value)[1] : null);
 
-        return $match ? [$column, MatchSubqueryFactory::new()->create($match)] : [$column];
+        return $match ? [$column, Subquery::new()->create($match)] : [$column];
     }
 }

@@ -19,6 +19,7 @@ use Drewlabs\Core\Helpers\Str;
 use Drewlabs\Query\Contracts\FilterBagInterface;
 use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\Queryable as AbstractQueryable;
+use Drewlabs\Query\Sanitizers\Expression;
 use Drewlabs\Query\Utils\FiltersBag;
 use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
 
@@ -203,12 +204,14 @@ final class PreparesFiltersBag
 
             $factory = function (FiltersInterface $instance, $builder) use ($output) {
                 $output = $output ?? [];
-                $statements = [];
+                $expressions = [];
                 foreach ($output as $key => $value) {
-                    $statements[] = new QueryStatement($key, $value);
+                    $expressions[] = new Expression($key, $value);
                 }
 
-                return QueryStatementsReducer::new($statements)->call($instance, $builder);
+                return array_reduce($expressions, function ($carry, $expression) use ($builder) {
+                    return $expression->apply($carry, $builder);
+                }, $instance);
             };
 
             $output = array_merge_recursive(
@@ -261,12 +264,12 @@ final class PreparesFiltersBag
                 [$method, $value, $operator] = ['and', Str::after("and:$current:", $value), $current];
                 break;
             }
-            
+
             if (Str::startsWith((string) $value, "&&:$current:")) {
                 [$method, $value, $operator] = ['and', Str::after("&&:$current:", $value), $current];
                 break;
             }
-            
+
             if (Str::startsWith((string) $value, "$current:")) {
                 [$value, $operator] = [Str::after("$current:", $value), $current];
                 break;
@@ -280,7 +283,7 @@ final class PreparesFiltersBag
         }
 
         $operator = $operator ?? '=';
-        
+
         $operator = strtolower($operator) === '=like' ? 'like' : ($operator == '==' ? '=' : $operator);
         $value = $operator === 'like' ? '%' . trim(strval($value), '%') . '%' : $value;
 

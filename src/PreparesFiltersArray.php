@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
+use Drewlabs\Query\Sanitizers\{LogicalExpression, ExistsExpression, InExpression, NullExpression, OrderByExpression};
+
 /**
  * @internal
  */
@@ -119,22 +121,22 @@ class PreparesFiltersArray
             case 'date':
             case 'ordate':
             case 'or':
-                return (new PreparesBaseQuery())($params);
+                return (new LogicalExpression())($params);
             case 'exists':
             case 'orexists':
             case 'notexists':
             case 'ornotexists':
-                return (new PreparesExistQuery())($params);
+                return (new ExistsExpression())($params);
             case 'in':
             case 'notin':
-                return (new PreparesInQuery())($params);
+                return (new InExpression())($params);
             case 'sort':
-                return (new PreparesOrderByQuery())($params);
+                return (new OrderByExpression())($params);
             case 'isnull':
             case 'orisnull':
             case 'notnull':
             case 'ornotnull':
-                return (new PreparesNullQuery())($params);
+                return (new NullExpression())($params);
             default:
                 return $params;
         }

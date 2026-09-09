@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Drewlabs\Query;
+namespace Drewlabs\Query\Sanitizers;
 
 use Closure;
 use Drewlabs\Query\Contracts\FiltersInterface;
@@ -19,7 +19,7 @@ use Drewlabs\Query\Contracts\FiltersInterface;
 /**
  * @internal
  */
-class MatchSubqueryFactory
+class Subquery
 {
     /**
      * Create new class instance
@@ -34,14 +34,16 @@ class MatchSubqueryFactory
     /**
      * Create a match subquery closure
      * 
-     * @param mixed $arguments 
+     * @param mixed $arguments
+     * 
      * @return Closure(FiltersInterface $instance, mixed $builder): FiltersInterface 
      */
     public function create($arguments)
     {
         return static function (FiltersInterface $instance, $builder) use ($arguments) {
-            $statements = (new PreparesQueryStatement())->__invoke($arguments);
-            return QueryStatementsReducer::new($statements)->call($instance, $builder);
+            return array_reduce((new ExpressionFactory())->__invoke($arguments), function ($carry, $expression) use ($builder) {
+                return $expression->apply($carry, $builder);
+            }, $instance);
         };
     }
 }

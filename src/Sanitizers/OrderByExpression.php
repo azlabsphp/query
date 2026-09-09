@@ -11,16 +11,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Drewlabs\Query;
+namespace Drewlabs\Query\Sanitizers;
 
 use BadMethodCallException;
 use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Query\Contracts\PreparesQuery;
+use InvalidArgumentException;
 
 /**
  * @internal
  */
-final class PreparesOrderByQuery implements PreparesQuery
+final class OrderByExpression implements PreparesQuery
 {
     public function __invoke($params)
     {
@@ -39,7 +40,7 @@ final class PreparesOrderByQuery implements PreparesQuery
         }
 
         if (!(isset($params['by']) || isset($params['column'])) && !isset($params['order'])) {
-            throw new \InvalidArgumentException('sort query expects a column and order properties');
+            throw new InvalidArgumentException('sort query expects a column and order properties');
         }
 
         $by = $params['column'] ?? $params['by'];
