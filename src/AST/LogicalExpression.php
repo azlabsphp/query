@@ -53,21 +53,14 @@ final class LogicalExpression implements Expression
         return $instance;
     }
 
-    public function toArray()
-    {
-        return [ 'method' => $this->name, 'params' => count($this->expressions) === 1 ? $this->expressions[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->expressions) ];
-    }
-
     /** @return array<string, mixed>  */
     public function toDict()
     {
-        return [ $this->name => count($this->expressions) === 1 ? $this->expressions[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->expressions) ];
+        return [ $this->name => count($this->expressions) === 1 ? $this->expressions[0]->toExpression() : array_map(function ($expression) { return $expression->toExpression(); }, $this->expressions) ];
     }
 
     public function toExpression()
     {
         return count($this->expressions) === 1 ? $this->expressions[0]->toExpression() : array_map(function ($expression) { return ['method' => $expression->getName(), 'params' => $expression->toExpression()]; }, $this->expressions);
-        // print_r(['type' => 'logical', 'expression' => $expression, 'count' => count($this->expressions)]);
-        // return $expression;
     }
 }

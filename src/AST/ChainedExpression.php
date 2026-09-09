@@ -45,11 +45,6 @@ final class ChainedExpression implements Expression
         return array_reduce($this->expressions, function ($carry, $expression) use (&$builder) { return $expression->apply($carry, $builder); }, $instance);
     }
 
-    public function toArray()
-    {
-        return array_map(function ($expression) { return $expression->toArray(); }, $this->expressions);
-    }
-
     /** @return array<string, mixed>  */
     public function toDict()
     {

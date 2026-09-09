@@ -57,14 +57,6 @@ final class ExistsExpression implements Expression
         return $instance;
     }
 
-    public function toArray()
-    {
-        if (empty($this->query)) {
-            return ['method' => $this->name, 'column' => $this->property];
-        }
-
-        return [ 'method' => $this->name, 'column' => $this->property, 'match' => count($this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->query) ];
-    }
 
     /** @return array<string, mixed>  */
     public function toDict()
@@ -73,7 +65,7 @@ final class ExistsExpression implements Expression
             return [$this->name => [$this->property]];
         }
 
-        return [ $this->name => [ $this->property, count($this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->query) ] ];
+        return [ $this->name => [ $this->property, count($this->query) === 1 ? $this->query[0]->toExpression() : array_map(function ($expression) { return ['method' => $expression->getName(), 'params' => $expression->toExpression()]; }, $this->query) ] ];
     }
 
     public function toExpression()
@@ -82,6 +74,6 @@ final class ExistsExpression implements Expression
             return [ 'column' => $this->property ];
         }
 
-        return [ 'column' => $this->property, 'match' => count($this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->query) ];
+        return [ 'column' => $this->property, 'match' => count($this->query) === 1 ? $this->query[0]->toExpression() : array_map(function ($expression) { return ['method' => $expression->getName(), 'params' => $expression->toExpression()]; }, $this->query) ];
     }
 }

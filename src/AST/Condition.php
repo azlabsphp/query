@@ -37,19 +37,14 @@ final class Condition
         $this->value = $value;
     }
 
-    public function toArray()
-    {
-        return [$this->name, $this->op, $this->value];
-    }
-
     public function toExpression()
     {
-        return $this->toArray();
+        return [$this->name, $this->op, $this->value];
     }
 
 
     public function toDict()
     {
-        return $this->toArray();
+        return $this->toExpression();
     }
 }
