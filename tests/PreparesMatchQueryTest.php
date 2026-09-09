@@ -42,15 +42,6 @@ class PreparesMatchQueryTest extends TestCase
         (new ExpressionFactory)->__invoke('(name, like, \'%computer%\')');
     }
 
-    // public function test_prepares_match_query_on_malformed_str_syntax_2()
-    // {
-    //     // $this->expectException(MalformedQueryExpression::class);
-    //     $result = (new ExpressionFactory)->__invoke('where(name, like, \'%computer%\'');
-
-    //     print_r($result);
-
-    //     $this->assertTrue(true);
-    // }
 
     public function test_prepares_match_query_on_invalid_type_syntax()
     {
