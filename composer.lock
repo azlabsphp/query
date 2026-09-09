@@ -67,16 +67,16 @@
         },
         {
             "name": "drewlabs/collections",
-            "version": "v0.3.1",
+            "version": "v0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/collections.git",
-                "reference": "e0cc98cd7f7937de26d614e17fa57679518b306b"
+                "reference": "eaadb17afd8df04c82581ffe083b39941913eb18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/collections/zipball/e0cc98cd7f7937de26d614e17fa57679518b306b",
-                "reference": "e0cc98cd7f7937de26d614e17fa57679518b306b",
+                "url": "https://api.github.com/repos/azlabsphp/collections/zipball/eaadb17afd8df04c82581ffe083b39941913eb18",
+                "reference": "eaadb17afd8df04c82581ffe083b39941913eb18",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "drewlabs/overloadable": "^0.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.0"
+                "phpunit/phpunit": "^9.0|^11.0"
             },
             "type": "library",
             "autoload": {
@@ -105,9 +105,9 @@
             "description": "Containers & Streams API implementation",
             "support": {
                 "issues": "https://github.com/azlabsphp/collections/issues",
-                "source": "https://github.com/azlabsphp/collections/tree/v0.3.1"
+                "source": "https://github.com/azlabsphp/collections/tree/v0.3.2"
             },
-            "time": "2026-06-23T19:32:53+00:00"
+            "time": "2026-09-09T17:57:24+00:00"
         },
         {
             "name": "drewlabs/contracts",
@@ -153,16 +153,16 @@
         },
         {
             "name": "drewlabs/core-helpers",
-            "version": "v0.4.3",
+            "version": "v0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/drewlabs-core-helpers.git",
-                "reference": "f27e102754b176cd5182b7331b3482e80652a450"
+                "reference": "5102bb225e9562805a830e593c103f9ce99729f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/drewlabs-core-helpers/zipball/f27e102754b176cd5182b7331b3482e80652a450",
-                "reference": "f27e102754b176cd5182b7331b3482e80652a450",
+                "url": "https://api.github.com/repos/azlabsphp/drewlabs-core-helpers/zipball/5102bb225e9562805a830e593c103f9ce99729f7",
+                "reference": "5102bb225e9562805a830e593c103f9ce99729f7",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +176,7 @@
             "require-dev": {
                 "nyholm/psr7": "^1.3",
                 "nyholm/psr7-server": "^1.0",
-                "phpunit/phpunit": "^9.0"
+                "phpunit/phpunit": "^9.0|^11.0"
             },
             "type": "library",
             "autoload": {
@@ -201,9 +201,9 @@
             "description": "Set of global function for handling utility task ranging from array, string and datetimes manipulations",
             "support": {
                 "issues": "https://github.com/azlabsphp/drewlabs-core-helpers/issues",
-                "source": "https://github.com/azlabsphp/drewlabs-core-helpers/tree/v0.4.3"
+                "source": "https://github.com/azlabsphp/drewlabs-core-helpers/tree/v0.4.4"
             },
-            "time": "2026-07-24T12:48:48+00:00"
+            "time": "2026-09-08T16:00:11+00:00"
         },
         {
             "name": "drewlabs/overloadable",

@@ -18,7 +18,7 @@ use Drewlabs\Query\Exceptions\MalformedQueryExpression;
 final class Builder
 {
     /** @var string */
-    private $pattern = '/(?:->|\b)(and|or|in|exists)(?=\()|\'[^\']*\'|"[^"]*"|([a-zA-Z0-9_\.%]+)|([=><!]+|\bLIKE\b)|([(),\[\]])/';
+    private $pattern = '/(?:->|\b)(and|or|in|exists|where)(?=\()|\'[^\']*\'|"[^"]*"|([a-zA-Z0-9_\.%]+)|([=><!]+|\bLIKE\b)|([(),\[\]])/';
 
     /** @var int */
     private $index = 0;
@@ -161,7 +161,7 @@ final class Builder
                 $nodes[] = $this->buildIn();
             } else if (in_array($token, ['exists', '->exists'])) {
                 array_push($nodes, $this->buildExists());
-            } else if (in_array($token, ['and', 'or', '->or', '->and'])) {
+            } else if (in_array($token, ['and', 'or', 'where', '->or', '->and', '->where'])) {
                 $nodes[] = $this->buildNested();
             } else {
                 $field = $this->consume();
