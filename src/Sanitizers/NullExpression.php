@@ -21,7 +21,7 @@ use InvalidArgumentException;
 /**
  * @internal
  */
-class NullExpression implements PreparesQuery
+final class NullExpression implements PreparesQuery
 {
     public function __invoke($params)
     {

@@ -13,26 +13,61 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\AST;
 
-final class InExpression
+use Drewlabs\Query\Contracts\Expression;
+use Drewlabs\Query\Contracts\FiltersInterface;
+use Override;
+
+final class InExpression implements Expression
 {
     /** @var string */
-    private $name;
+    private $property;
 
     /** @var array */
     private $values;
 
     /** @var string */
-    private $method;
+    private $name;
 
-    public function __construct(string $name, array $values, string $method = 'in')
+    public function __construct(string $property, array $values, string $name = 'in')
     {
-        $this->name = $name;
+        $this->property = $property;
         $this->values = $values;
-        $this->method = $method;
+        $this->name = $name;
+    }
+
+    #[Override]
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    #[Override]
+    public function getParams()
+    {
+        return $this->values;
+    }
+
+    #[Override]
+    public function apply(FiltersInterface $instance, $builder): FiltersInterface
+    {
+        $instance->invoke($this->name, $builder, $this->toExpression());
+
+        return $instance;
     }
 
     public function toArray()
     {
-        return ['method' => $this->method, 'params' => [$this->name, $this->values]];
+        return [ 'method' => $this->name, 'params' => [ $this->property, $this->values ] ];
+    }
+
+    /** @return array<string, mixed>  */
+    public function toDict()
+    {
+        return [ $this->name => [ $this->property, $this->values ] ];
+    }
+
+    public function toExpression()
+    {
+        return [ $this->property, $this->values ];
     }
 }

@@ -13,33 +13,75 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\AST;
 
-final class ExistsExpression
+use Drewlabs\Query\Contracts\Expression;
+use Drewlabs\Query\Contracts\FiltersInterface;
+use Drewlabs\Query\Sanitizers\Sanitizer;
+use Override;
+
+final class ExistsExpression implements Expression
 {
     /** @var string */
-    private $column;
+    private $property;
 
     /** @var array */
     private $query;
 
     /** @var string */
-    private $method;
+    private $name;
 
-    public function __construct(string $column, array $query, string $method = 'exists')
+    public function __construct(string $property, array $query, string $name = 'exists')
     {
-        $this->column = $column;
+        $this->property = $property;
         $this->query = $query;
-        $this->method = $method;
+        $this->name = $name;
     }
 
+    #[Override]
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    #[Override]
+    public function getParams()
+    {
+        return $this->query;
+    }
+
+    #[Override]
+    public function apply(FiltersInterface $instance, $builder): FiltersInterface
+    {
+        $sanitizer = new Sanitizer($this->name);
+        $instance->invoke($this->name, $builder, $sanitizer->apply($this->toExpression()));
+
+        return $instance;
+    }
 
     public function toArray()
     {
         if (empty($this->query)) {
-            return ['method' => $this->method, 'column' => $this->column];
+            return ['method' => $this->name, 'column' => $this->property];
         }
 
-        return ['method' => $this->method, 'column' => $this->column, 'match' => count( $this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) {
-            return $expression->toArray();
-        }, $this->query)];
+        return [ 'method' => $this->name, 'column' => $this->property, 'match' => count($this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->query) ];
+    }
+
+    /** @return array<string, mixed>  */
+    public function toDict()
+    {
+        if (empty($this->query)) {
+            return [$this->name => [$this->property]];
+        }
+
+        return [ $this->name => [ $this->property, count($this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->query) ] ];
+    }
+
+    public function toExpression()
+    {
+        if (empty($this->query)) {
+            return [ 'column' => $this->property ];
+        }
+
+        return [ 'column' => $this->property, 'match' => count($this->query) === 1 ? $this->query[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->query) ];
     }
 }

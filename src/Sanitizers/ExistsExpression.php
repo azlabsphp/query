@@ -20,7 +20,7 @@ use Drewlabs\Query\Contracts\PreparesQuery;
 /**
  * @internal
  */
-class ExistsExpression implements PreparesQuery
+final class ExistsExpression implements PreparesQuery
 {
     public function __invoke($params)
     {

@@ -16,6 +16,8 @@ namespace Drewlabs\Query;
 use Drewlabs\Query\Contracts\FiltersBuilderInterface;
 use Drewlabs\Query\Utils\SubQuery;
 use Drewlabs\Query\Contracts\Conditionable;
+use Drewlabs\Query\Sanitizers\ArraySanitizer;
+use Drewlabs\Query\Sanitizers\Sanitizer;
 
 /**
  * Provides implementation for building filters query using fluent interface.
@@ -452,7 +454,18 @@ final class Builder implements FiltersBuilderInterface
      */
     public function getQuery(?string $method = null, $default = null)
     {
-        return $method ? (isset($this->__QUERY__[$method]) ? PreparesFiltersArray::doPrepare($this->__QUERY__[$method], $method) : $default ?? null) : PreparesFiltersArray::new($this->__QUERY__)->call() ?? [];
+        if (!$method) {
+            $sanitizer = new ArraySanitizer;
+            return $sanitizer->apply($this->__QUERY__);
+        }
+
+        $value = $this->__QUERY__[$method] ?? null;
+        if (null === $value) {
+            return $default;
+        }
+
+        $sanitizer = new Sanitizer($method);
+        return $sanitizer->apply($value);
     }
 
     /**

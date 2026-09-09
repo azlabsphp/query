@@ -13,25 +13,61 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\AST;
 
-final class LogicalExpression
+use Drewlabs\Query\Contracts\Expression;
+use Drewlabs\Query\Contracts\FiltersInterface;
+use Drewlabs\Query\Sanitizers\Sanitizer;
+use Override;
+
+final class LogicalExpression implements Expression
 {
     /** @var string */
-    private $method;
+    private $name;
 
     /** @var array */
     private $expressions;
 
-    public function __construct(string $method, array $expressions)
+    public function __construct(string $name, array $expressions)
     {
-        $this->method = $method;
+        $this->name = $name;
         $this->expressions = $expressions;
     }
 
+    #[Override]
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    #[Override]
+    public function getParams()
+    {
+        return $this->expressions;
+    }
+
+    #[Override]
+    public function apply(FiltersInterface $instance, $builder): FiltersInterface
+    {
+        $sanitizer = new Sanitizer($this->name);
+        $instance->invoke($this->name, $builder, $sanitizer->apply($this->toExpression()));
+
+        return $instance;
+    }
 
     public function toArray()
     {
-        return ['method' => $this->method, 'params' => count($this->expressions) === 1 ? $this->expressions[0]->toArray() : array_map(function ($expression) {
-            return $expression->toArray();
-        }, $this->expressions)];
+        return [ 'method' => $this->name, 'params' => count($this->expressions) === 1 ? $this->expressions[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->expressions) ];
+    }
+
+    /** @return array<string, mixed>  */
+    public function toDict()
+    {
+        return [ $this->name => count($this->expressions) === 1 ? $this->expressions[0]->toArray() : array_map(function ($expression) { return $expression->toArray(); }, $this->expressions) ];
+    }
+
+    public function toExpression()
+    {
+        return count($this->expressions) === 1 ? $this->expressions[0]->toExpression() : array_map(function ($expression) { return ['method' => $expression->getName(), 'params' => $expression->toExpression()]; }, $this->expressions);
+        // print_r(['type' => 'logical', 'expression' => $expression, 'count' => count($this->expressions)]);
+        // return $expression;
     }
 }

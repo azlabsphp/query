@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Query\AST;
 
 
-final class Expression
+final class Condition
 {
     /** @var string */
     private $name;
@@ -26,7 +26,6 @@ final class Expression
     private $value;
 
     /**
-     * 
      * @param string $name 
      * @param string $op 
      * @param mixed $value 
@@ -38,9 +37,19 @@ final class Expression
         $this->value = $value;
     }
 
-
     public function toArray()
     {
         return [$this->name, $this->op, $this->value];
+    }
+
+    public function toExpression()
+    {
+        return $this->toArray();
+    }
+
+
+    public function toDict()
+    {
+        return $this->toArray();
     }
 }

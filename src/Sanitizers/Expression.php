@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\Sanitizers;
 
+use Drewlabs\Query\Contracts\Expression as AbstractExpression;
 use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Filters;
-use Drewlabs\Query\PreparesFiltersArray;
 
-final class Expression
+final class Expression implements AbstractExpression
 {
     /** @var string */
-    private $method;
+    private $name;
 
     /** @var array */
     private $args;
@@ -30,28 +30,19 @@ final class Expression
      *
      * @param array $args
      */
-    public function __construct(string $method, array $args)
+    public function __construct(string $name, array $args)
     {
-        $this->method = Filters::get($method);
+        $this->name = Filters::get($name);
         $this->args = $args;
     }
 
-    /**
-     * Return the query method
-     * 
-     * @return string 
-     */
-    public function method()
+
+    public function getName(): string
     {
-        return $this->method;
+        return $this->name;
     }
 
-    /**
-     * Returns the list statement arguments
-     * 
-     * @return array 
-     */
-    public function args()
+    public function getParams(): array
     {
         return $this->args ?? [];
     }
@@ -64,29 +55,15 @@ final class Expression
      */
     public function call(object $driver)
     {
-        return call_user_func_array([$driver, $this->method()], $this->args());
+        return call_user_func_array([$driver, $this->getName()], $this->getParams());
     }
 
-    /**
-     * invoke the filters instance on the builder with compiled expression
-     * 
-     * @param FiltersInterface $instance 
-     * @param mixed $builder
-     * 
-     * @return FiltersInterface 
-     */
-    public function apply(FiltersInterface $instance, $builder)
+    public function apply(FiltersInterface $instance, $builder): FiltersInterface
     {
-        return $instance->invoke($this->method, $builder, PreparesFiltersArray::doPrepare($this->args ?? [], $method = $this->method));
-    }
+        $sanitizer = new Sanitizer($this->name);
+        
+        $instance->invoke($this->name, $builder, $sanitizer->apply($this->args ?? []));
 
-    /**
-     * Returns the array representation of the statement.
-     *
-     * @return (string|array)[]
-     */
-    public function toArray()
-    {
-        return ['method' => trim($this->method), 'params' => $this->args()];
+        return $instance;
     }
 }

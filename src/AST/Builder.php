@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query\AST;
 
+use Drewlabs\Query\Exceptions\MalformedQueryExpression;
+
 final class Builder
 {
     /** @var string */
-    private $pattern = '/(?:->|\b)(and|or|in|exists)(?=\()|\'[^\']*\'|"[^"]*"|([a-zA-Z0-9_\.]+)|([=><!]+)|([(),\[\]])/';
+    private $pattern = '/(?:->|\b)(and|or|in|exists)(?=\()|\'[^\']*\'|"[^"]*"|([a-zA-Z0-9_\.%]+)|([=><!]+|\bLIKE\b)|([(),\[\]])/';
 
     /** @var int */
     private $index = 0;
@@ -49,13 +51,13 @@ final class Builder
     /**
      * @param null|string $expected 
      * @return ?string 
-     * @throws \Exception 
+     * @throws MalformedQueryExpression 
      */
     private function consume(?string $expected = null)
     {
         $token = $this->tokens[$this->index] ?? null;
         if ($expected !== null && $token !== $expected) {
-            throw new \Exception(sprintf("syntax error: expected '%s', got '%s' at index %d", $expected, $token, $this->index));
+            throw new MalformedQueryExpression(sprintf("syntax error: expected '%s', got '%s' at index %d", $expected, $token, $this->index));
         }
         $this->index++;
         return $token;
@@ -174,7 +176,7 @@ final class Builder
                     $operator = '=';
                 }
 
-                $nodes[] = new Expression($field, $operator, $this->parseVal($val));
+                $nodes[] = new Condition($field, $operator, $this->parseVal($val));
             }
 
             if (isset($this->tokens[$this->index]) && $this->tokens[$this->index] === ',') {
@@ -189,7 +191,12 @@ final class Builder
     {
         preg_match_all($this->pattern, $expression, $matches);
         $this->tokens = array_values(array_filter($matches[0], fn($v) => trim($v) !== ''));
+        $output =  $this->walk();
 
-        return $this->walk();
+        # reset pointers after building expression to allow compiler to be reuse for building other expression
+        $this->tokens = [];
+        $this->index = 0;
+
+        return $output;
     }
 }

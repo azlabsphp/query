@@ -16,9 +16,11 @@ namespace Drewlabs\Query;
 use Drewlabs\Core\Helpers\Arr;
 use Drewlabs\Core\Helpers\Functional;
 use Drewlabs\Core\Helpers\Str;
+use Drewlabs\Query\AST\Builder;
 use Drewlabs\Query\Contracts\FilterBagInterface;
 use Drewlabs\Query\Contracts\FiltersInterface;
 use Drewlabs\Query\Contracts\Queryable as AbstractQueryable;
+use Drewlabs\Query\Sanitizers\ArraySanitizer;
 use Drewlabs\Query\Sanitizers\Expression;
 use Drewlabs\Query\Utils\FiltersBag;
 use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
@@ -169,10 +171,16 @@ final class PreparesFiltersBag
         $output = $output ?? [];
 
         if ($bag->has('_query')) {
+
             $query = $bag->get('_query');
             $query = \is_string($query) ? json_decode($query, true) : (array) $query;
 
-            if (!\is_array($query) || !(is_array($query) && array_keys($query) !== range(0, \count($query) - 1))) {
+            if (is_string($query)) {
+                $builder = new Builder;
+                $query = $builder->build($query)->toDict();
+            }
+
+            if (!\is_array($query) || (is_array($query) && !Arr::isassoc($query))) {
                 return $output;
             }
 
@@ -199,8 +207,8 @@ final class PreparesFiltersBag
                 }
             }
 
-            $array = [];
-            PreparesFiltersArray::new($query)->prepareInto($array);
+            $sanitizer = new ArraySanitizer;
+            $array = $sanitizer->apply($query);
 
             $factory = function (FiltersInterface $instance, $builder) use ($output) {
                 $output = $output ?? [];

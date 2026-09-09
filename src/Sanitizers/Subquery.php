@@ -19,7 +19,7 @@ use Drewlabs\Query\Contracts\FiltersInterface;
 /**
  * @internal
  */
-class Subquery
+final class Subquery
 {
     /**
      * Create new class instance
@@ -41,9 +41,8 @@ class Subquery
     public function create($arguments)
     {
         return static function (FiltersInterface $instance, $builder) use ($arguments) {
-            return array_reduce((new ExpressionFactory())->__invoke($arguments), function ($carry, $expression) use ($builder) {
-                return $expression->apply($carry, $builder);
-            }, $instance);
+            $factory = new ExpressionFactory();
+            return $factory->__invoke($arguments)->apply($instance, $builder);
         };
     }
 }

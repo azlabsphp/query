@@ -20,7 +20,7 @@ class MalformedQueryExpression extends QueryException
      */
     public function __construct(string $query)
     {
-        $message = 'Expect query expression syntax to be method(p1, p2, p3, ...), but '.$query.' was passed instead';
+        $message = 'expected query expression syntax to be method(p1, ...), but '.$query.' was passed instead';
         parent::__construct($message);
     }
 }
