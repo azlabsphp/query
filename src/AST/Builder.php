@@ -18,7 +18,7 @@ use Drewlabs\Query\Exceptions\MalformedQueryExpression;
 final class Builder
 {
     /** @var string */
-    private $pattern = '/(?:->|\b)(and|or|in|exists|where)(?=\()|\'[^\']*\'|"[^"]*"|([a-zA-Z0-9_\.%]+)|([=><!]+|\bLIKE\b)|([(),\[\]])/';
+    private $pattern = '/(?:->|\b)(and|or|in|exists|where)(?=\()|\'[^\']*\'|"[^"]*"|([=><!]+|\bLIKE\b)|([^\s,()\[\]=!<>][^,()\[\]=!<>]*[^\s,()\[\]=!<>]|[^\s,()\[\]=!<>])|([(),\[\]])/';
 
     /** @var int */
     private $index = 0;
