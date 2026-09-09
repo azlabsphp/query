@@ -138,7 +138,7 @@ class Filters
     ];
 
     /**
-     * Get the filter matching the `$name` parameter.
+     * get the filter matching the `$name` parameter.
      *
      * @return string
      */
@@ -148,7 +148,7 @@ class Filters
     }
 
     /**
-     * Check is `$name` exists in supported query filters.
+     * check is `$name` exists in supported query filters.
      *
      * @return bool
      */

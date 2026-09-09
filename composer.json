@@ -32,7 +32,7 @@
         "drewlabs/collections": "^0.3",
         "drewlabs/contracts": "^0.3|^0.4",
         "drewlabs/core-helpers": "^0.3|^0.4",
-        "drewlabs/query-contracts": "^0.3"
+        "drewlabs/query-contracts": "^0.3.5"
     },
     "prefer-stable": true,
     "config": {

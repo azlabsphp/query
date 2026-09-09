@@ -36,7 +36,7 @@ class ConditionQuery implements CompilesQueryParameter
     }
 
     /**
-     * Compile each element of the muti-dimensional array.
+     * compile each element of the muti-dimensional array.
      *
      * @throws \InvalidArgumentException
      *

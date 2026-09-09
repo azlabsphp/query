@@ -88,7 +88,8 @@ final class QueryLanguageAdapter implements QueryLanguageInterface
      * insert multiple lines into the database
      * 
      * @param array $values 
-     * @return void 
+     * @return void
+     * 
      * @throws InvalidArgumentException 
      */
     public function insert(array $values)
@@ -97,9 +98,7 @@ final class QueryLanguageAdapter implements QueryLanguageInterface
             throw new \InvalidArgumentException('$attributes must be a multi-dimensional tableau');
         }
 
-        foreach ($values as $value) {
-            $this->language->createMany($value);
-        }
+        $this->language->createMany($values);
     }
 
     /**

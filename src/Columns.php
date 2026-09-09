@@ -17,13 +17,11 @@ use Drewlabs\Core\Helpers\Str;
 
 final class Columns
 {
-    /**
-     * @var array<string>
-     */
+    /** @var array<string> */
     private $value;
 
     /**
-     * Creates class instance.
+     * creates class instance.
      */
     public function __construct(array $columns)
     {
@@ -31,7 +29,7 @@ final class Columns
     }
 
     /**
-     * Creates new class instance.
+     * creates new class instance.
      *
      * @param array $columns
      *
@@ -72,7 +70,7 @@ final class Columns
     }
 
     /**
-     * Convert the iterable list into 1-dimensional array.
+     * convert the iterable list into 1-dimensional array.
      *
      * @param array $values
      *

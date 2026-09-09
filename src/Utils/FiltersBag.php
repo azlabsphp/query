@@ -18,14 +18,14 @@ use Drewlabs\Query\Contracts\FilterBagInterface;
 class FiltersBag implements FilterBagInterface
 {
     /**
-     * Array of filters.
+     * array of filters.
      *
      * @var array<string,array<string,mixed>|mixed>
      */
     private $values;
 
     /**
-     * Creates class instance.
+     * creates class instance.
      */
     public function __construct(array $values)
     {
@@ -33,7 +33,7 @@ class FiltersBag implements FilterBagInterface
     }
 
     /**
-     * Creates new filters bag instance.
+     * creates new filters bag instance.
      *
      * @return static
      */

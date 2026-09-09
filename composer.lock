@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3562049d7bf28aed6b65794bf18ffc9a",
+    "content-hash": "7323e4f803540fc9e2987058929d3bae",
     "packages": [
         {
             "name": "brick/math",
@@ -250,16 +250,16 @@
         },
         {
             "name": "drewlabs/query-contracts",
-            "version": "v0.3.11",
+            "version": "v0.3.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/query-contracts.git",
-                "reference": "0b320f39316d6f0c9cbc2d8a225f2d4d03384041"
+                "reference": "c5611a8b2fd5bcee1f742c1dc06012abdf7c7b06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/query-contracts/zipball/0b320f39316d6f0c9cbc2d8a225f2d4d03384041",
-                "reference": "0b320f39316d6f0c9cbc2d8a225f2d4d03384041",
+                "url": "https://api.github.com/repos/azlabsphp/query-contracts/zipball/c5611a8b2fd5bcee1f742c1dc06012abdf7c7b06",
+                "reference": "c5611a8b2fd5bcee1f742c1dc06012abdf7c7b06",
                 "shasum": ""
             },
             "require": {
@@ -290,9 +290,9 @@
             ],
             "support": {
                 "issues": "https://github.com/azlabsphp/query-contracts/issues",
-                "source": "https://github.com/azlabsphp/query-contracts/tree/v0.3.11"
+                "source": "https://github.com/azlabsphp/query-contracts/tree/v0.3.12"
             },
-            "time": "2026-06-26T13:27:40+00:00"
+            "time": "2026-09-09T21:27:26+00:00"
         },
         {
             "name": "psr/container",

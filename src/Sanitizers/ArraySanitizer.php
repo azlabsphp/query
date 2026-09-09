@@ -20,6 +20,7 @@ final class ArraySanitizer
     public function apply(array $values)
     {
         $output = [];
+        
         foreach ($values as $name => $value) {
             if (!Filters::exists($name)) {
                 continue;

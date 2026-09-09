@@ -41,7 +41,7 @@ final class Subquery
     public function create($arguments)
     {
         return static function (FiltersInterface $instance, $builder) use ($arguments) {
-            $factory = new ExpressionFactory();
+            $factory = new ExpressionFactory;
             return $factory->__invoke($arguments)->apply($instance, $builder);
         };
     }

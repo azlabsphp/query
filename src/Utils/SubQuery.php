@@ -18,14 +18,10 @@ use Drewlabs\Query\Contracts\FiltersBuilderInterface;
 
 class SubQuery
 {
-    /**
-     * @var string
-     */
+    /**  @var string */
     private $method;
 
-    /**
-     * @var array|mixed
-     */
+    /** @var array|mixed */
     private $builder;
 
 
@@ -44,7 +40,7 @@ class SubQuery
     }
 
     /**
-     * Method applied in the subquery.
+     * method applied in the subquery.
      *
      * @return self
      */
@@ -57,7 +53,7 @@ class SubQuery
     }
 
     /**
-     * Parameters to apply in the subquery.
+     * parameters to apply in the subquery.
      *
      * @param array|int|float|string $params
      *
@@ -71,7 +67,7 @@ class SubQuery
     }
 
     /**
-     * Reurns a JSON serializable object implementation.
+     * returns a JSON serializable object implementation.
      *
      * @return array|mixed
      */

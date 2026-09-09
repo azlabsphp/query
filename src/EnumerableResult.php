@@ -21,13 +21,11 @@ use Error;
 
 class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
 {
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $values;
 
     /**
-     * Creates class instance.
+     * creates class instance.
      *
      * @param mixed $items
      */
@@ -116,7 +114,6 @@ class EnumerableResult implements EnumerableResultInterface, \JsonSerializable
         try {
             return $object->{$method}(...$args);
         } catch (\Error|\BadMethodCallException $e) {
-            // Call the default method if the specified method does not exits
             if ((null !== $default) && \is_callable($default)) {
                 return $default(...$args);
             }

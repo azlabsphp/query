@@ -16,11 +16,10 @@ namespace Drewlabs\Query\Exceptions;
 class MalformedQueryExpression extends QueryException
 {
     /**
-     * Creates exception instance.
+     * creates exception instance.
      */
-    public function __construct(string $query)
+    public function __construct(string $message)
     {
-        $message = 'expected query expression syntax to be method(p1, ...), but '.$query.' was passed instead';
         parent::__construct($message);
     }
 }

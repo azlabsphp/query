@@ -31,7 +31,7 @@ use Drewlabs\Query\Utils\Queryable as UtilsQueryable;
 final class PreparesFiltersBag
 {
     /**
-     * List of query operator supported by the Query Filters handler.
+     * list of query operator supported by the Query Filters handler.
      *
      * @var string[]
      */
@@ -43,7 +43,7 @@ final class PreparesFiltersBag
     private $bag;
 
     /**
-     * Creates class instances.
+     * creates class instances.
      *
      * @param FilterBagInterface $bag
      *
@@ -55,7 +55,7 @@ final class PreparesFiltersBag
     }
 
     /**
-     * Creates new class instance.
+     * creates new class instance.
      *
      * @param FilterBagInterface $bag
      *
@@ -67,7 +67,7 @@ final class PreparesFiltersBag
     }
 
     /**
-     * Creates Query filters from parameter bag request.
+     * creates Query filters from parameter bag request.
      *
      * @param AbstractQueryable|\Closure(): AbstractQueryable|null $queryable
      *
@@ -117,12 +117,12 @@ final class PreparesFiltersBag
             if (\is_string($value) && Str::contains($value, '|')) {
                 $items = \is_string($value) && Str::contains($value, '|') ? Str::split($value, '|') : $value;
                 foreach ($items as $item) {
-                    $filters = static::createSubQuery($filters, $key, $item, $queryable);
+                    $filters = static::createsubQuery($filters, $key, $item, $queryable);
                 }
                 continue;
             }
             if (!empty($value)) {
-                $filters = static::createSubQuery($filters, $key, $value, $queryable);
+                $filters = static::createsubQuery($filters, $key, $value, $queryable);
                 continue;
             }
         }
@@ -237,7 +237,7 @@ final class PreparesFiltersBag
      *
      * @return array
      */
-    private static function createSubQuery(array $array, $key, $value, AbstractQueryable $queryable)
+    private static function createsubQuery(array $array, $key, $value, AbstractQueryable $queryable)
     {
         if (\in_array($key, array_diff($queryable->getDeclaredColumns(), $queryable->getDeclaredRelations()), true)) {
             [$operator, $value, $method] = static::parseVal($value);
@@ -256,8 +256,7 @@ final class PreparesFiltersBag
     }
 
     /**
-     * Parse the value in order to return the query method to apply and the operator
-     * that is needed to be used.
+     * parse the value in order to return the query method to apply and the operator that is needed to be used.
      *
      * @param string $value
      *
@@ -301,7 +300,7 @@ final class PreparesFiltersBag
     }
 
     /**
-     * Prepare default query filters.
+     * prepares default query filters.
      *
      * @return \Traversable<string, mixed, mixed, void>
      */
@@ -313,7 +312,7 @@ final class PreparesFiltersBag
     }
 
     /**
-     * Get sub query method based on the provided value.
+     * get sub query method based on the provided value.
      *
      * @param mixed $value
      *

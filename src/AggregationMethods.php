@@ -13,30 +13,30 @@ declare(strict_types=1);
 
 namespace Drewlabs\Query;
 
-class AggregationMethods
+class Aggregationmethods
 {
     /**
-     * Method signature for count aggregation on query result.
+     * method signature for count aggregation on query result.
      */
     public const COUNT = 'count';
 
     /**
-     * Method signature for max aggregation on query result.
+     * method signature for max aggregation on query result.
      */
     public const MAX = 'max';
 
     /**
-     * Method signature for min aggregation on query result.
+     * method signature for min aggregation on query result.
      */
     public const MIN = 'min';
 
     /**
-     * Method signature for avg aggregation on query result.
+     * method signature for avg aggregation on query result.
      */
     public const AVERAGE = 'avg';
 
     /**
-     * Method signature for sum aggregation on query result.
+     * method signature for sum aggregation on query result.
      */
     public const SUM = 'sum';
 }

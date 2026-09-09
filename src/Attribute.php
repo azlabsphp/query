@@ -20,18 +20,14 @@ namespace Drewlabs\Query;
  */
 class Attribute
 {
-    /**
-     * @var string|object
-     */
+    /** @var string|object */
     private $class;
 
-    /**
-     * @var string
-     */
+    /** @var string  */
     private $column;
 
     /**
-     * Creates a query attribute instance.
+     * creates a query attribute instance.
      *
      * @param array $attributes
      *

@@ -33,7 +33,7 @@ class PreparesMatchQueryTest extends TestCase
         $params = $result->getParams();
         $this->assertIsArray($params);
         $this->assertInstanceOf(Condition::class, $params[0]);
-        $this->assertEquals(['name', 'like', '%computer%'], $params[0]->toArray());
+        $this->assertEquals(['name', 'like', '%computer%'], $params[0]->toExpression());
     }
 
     public function test_prepares_match_query_on_malformed_str_syntax()

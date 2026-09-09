@@ -17,28 +17,20 @@ use Drewlabs\Query\Contracts\Queryable as AbstractQueryable;
 
 class Queryable implements AbstractQueryable
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $id;
 
-    /**
-     * @var array<string>
-     */
+    /** @var array<string> */
     private $columns;
 
-    /**
-     * @var array<string>
-     */
+    /** @var array<string> */
     private $relations;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $table;
 
     /**
-     * Creates class instances.
+     * creates class instances.
      *
      * @param array $columns
      */
@@ -51,7 +43,7 @@ class Queryable implements AbstractQueryable
     }
 
     /**
-     * Creates new instance of queryable from a source queryable.
+     * creates new instance of queryable from a source queryable.
      *
      * @return static
      */
