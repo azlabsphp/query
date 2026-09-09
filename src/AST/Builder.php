@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Drewlabs\Query\AST;
 
 use Drewlabs\Query\Exceptions\MalformedQueryExpression;
+use Drewlabs\Query\Filters;
 
 final class Builder
 {
@@ -69,7 +70,7 @@ final class Builder
      */
     function buildIn()
     {
-        ltrim($this->consume(), '->'); // read operator case on must appy or exists
+        $operator = ltrim($this->consume(), '->');
         $this->consume('(');
         $field = $this->consume();
         $this->consume(',');
@@ -86,7 +87,7 @@ final class Builder
         $this->consume(']');
         $this->consume(')');
 
-        return new InExpression($field, $values);
+        return new InExpression($field, $values, Filters::get(strtolower($operator)));
     }
 
 
@@ -95,8 +96,7 @@ final class Builder
      */
     function buildExists()
     {
-        $this->consume();
-        // ltrim($method, '->'); // case we should check for orexists or exists
+        $operator = ltrim($this->consume(), '->');
         $this->consume('(');
         $field = $this->consume();
 
@@ -120,7 +120,7 @@ final class Builder
             $this->consume(')');
         }
 
-        return new ExistsExpression($field, $subquery);
+        return new ExistsExpression($field, $subquery, Filters::get(strtolower($operator)));
     }
 
     /**
@@ -139,7 +139,7 @@ final class Builder
             }
         }
         $this->consume(')',);
-        return new LogicalExpression(strtolower($operator), $expressions);
+        return new LogicalExpression(Filters::get(strtolower($operator)), $expressions);
     }
 
     /**
