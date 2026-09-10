@@ -40,7 +40,7 @@ class PreparesFiltersBagTest extends TestCase
             private $inputs = [
                 'lastname' => 'Azandrew',
                 'age' => 29,
-                'addresses__email' => '&&:azandrewdevelopper@gmail.com',
+                'addresses__email' => 'and:azandrewdevelopper@gmail.com',
             ];
             use ViewModel;
         });
@@ -99,9 +99,9 @@ class PreparesFiltersBagTest extends TestCase
     public function test_filter_query_parameters_returns_and_clauses_if_value_contains_and_operator()
     {
         $result = PreparesFiltersBag::fromQueryParams(new Person(), $this->createParametersBag([
-            'email' => '&&:==:azandrewdevelopper@gmail.com',
+            'email' => 'and:==:azandrewdevelopper@gmail.com',
             'lastname' => 'and:=like:AZOMEDOH',
-            'age' => '&&:>=:2022-10-10|&&:<=:2022-10-10',
+            'age' => 'and:>=:2022-10-10|and:<=:2022-10-10',
         ]));
         $this->assertTrue(($result['and'] ?? null) !== null);
         $this->assertSame(['email', '=', 'azandrewdevelopper@gmail.com'], $result['and'][0]);
@@ -119,7 +119,7 @@ class PreparesFiltersBagTest extends TestCase
     //     $result = PreparesFiltersBag::new(
     //         $this->createParametersBag(
     //             [
-    //                 'email' => '&&:==:azandrewdevelopper@gmail.com',
+    //                 'email' => 'and:==:azandrewdevelopper@gmail.com',
     //                 'lastname' => 'and:=like:AZOMEDOH',
     //                 '_query' => [
     //                     'whereHas' => [

@@ -17,6 +17,10 @@ use Drewlabs\Query\Contracts\FilterBagInterface;
 
 class FiltersBag implements FilterBagInterface
 {
+
+    /** @var string[] list of keyword to treat as query keywords */
+    const KEYWORDS = ['_hidden', '_columns', '_sort', '_limit', '_query', 'page', 'per_page', '_logic', '_junction'];
+
     /**
      * array of filters.
      *

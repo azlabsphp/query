@@ -42,7 +42,7 @@ final class ChainedExpression implements Expression
     #[Override]
     public function apply(FiltersInterface $instance, $builder): FiltersInterface
     {
-        return array_reduce($this->expressions, function ($carry, $expression) use (&$builder) { return $expression->apply($carry, $builder); }, $instance);
+        return array_reduce($this->expressions, function ($carry, $expression) use ($builder) { return $expression->apply($carry, $builder); }, $instance);
     }
 
     /** @return array<string, mixed>  */
